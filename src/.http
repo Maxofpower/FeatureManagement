@@ -8,7 +8,3 @@ Accept: application/json
 GET {{ApiVersioningDemo_HostAddress}}/api/v1/greeting/custom-greeting
 
 ###
-
-GET {{ApiVersioningDemo_HostAddress}}/api/v1/greeting/custom-greeting
-
-###
