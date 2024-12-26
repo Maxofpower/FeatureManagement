@@ -1,0 +1,14 @@
+@ApiVersioningDemo_HostAddress = https://localhost:7226
+
+GET {{ApiVersioningDemo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+GET {{ApiVersioningDemo_HostAddress}}/api/v1/greeting/custom-greeting
+
+###
+
+GET {{ApiVersioningDemo_HostAddress}}/api/v1/greeting/custom-greeting
+
+###
