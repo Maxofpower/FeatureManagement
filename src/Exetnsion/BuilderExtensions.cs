@@ -1,7 +1,10 @@
 ﻿using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using Asp.Versioning.Conventions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -55,7 +58,15 @@ namespace FeatureManagementFilters.Extensions
 		{
 			services.AddSwaggerGen(c =>
 			{
-				c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+				var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+				foreach (var description in provider.ApiVersionDescriptions)
+				{
+					c.SwaggerDoc(description.GroupName, new Microsoft.OpenApi.Models.OpenApiInfo
+					{
+						Title = "API",
+						Version = description.ApiVersion.ToString()
+					});
+				}
 
 				// Add JWT Authentication to Swagger
 				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -100,7 +111,13 @@ namespace FeatureManagementFilters.Extensions
 					new HeaderApiVersionReader("X-Version"),
 					new UrlSegmentApiVersionReader()
 				);
-			}).AddApiExplorer(options =>
+			}).AddMvc(
+				options =>
+				{
+					// automatically applies an api version namespace onventions
+					options.Conventions.Add(new VersionByNamespaceConvention());
+				})
+				.AddApiExplorer(options =>
 			{
 				options.GroupNameFormat = "'v'V";
 				options.SubstituteApiVersionInUrl = true;

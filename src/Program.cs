@@ -1,5 +1,8 @@
+using Asp.Versioning.ApiExplorer;
 using FeatureManagementFilters.Extensions;
+using FeatureManagementFilters.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,8 @@ builder.Services.AddJwtAuthentication(builder.Configuration);
 
 // Use the generic method for feature management
 builder.Services.AddFeatureManagementWithFilters<UseGreetingFilter>();
+
+builder.Services.AddScoped<IAuthService, AuthService>();  // Registering the AuthService
 
 // Use the generic method for API versioning
 builder.Services.AddApiVersioningWithReader();
@@ -33,10 +38,13 @@ ConfigureRequestPipeline(app);
 void ConfigureSwaggerUI(WebApplication app)
 {
 	app.UseSwagger();
-	app.UseSwaggerUI(c =>
+	app.UseSwaggerUI(options =>
 	{
-		c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-		//c.RoutePrefix = string.Empty; // Optional: Serve the Swagger UI at the root URL
+		var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+		foreach (var description in provider.ApiVersionDescriptions)
+		{
+			options.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName);
+		}
 	});
 }
 

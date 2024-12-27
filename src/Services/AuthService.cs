@@ -1,46 +1,27 @@
-﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Mvc;
+﻿using FeatureManagementFilters.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-[ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}/[controller]")]
-[ApiController]
-public class AuthController : ControllerBase
+
+public class AuthService : IAuthService
 {
 	private readonly IConfiguration _configuration;
 
-	public AuthController(IConfiguration configuration)
+	public AuthService(IConfiguration configuration)
 	{
 		_configuration = configuration;
 	}
 
-	[HttpPost("login")]
-	public IActionResult Login([FromBody] LoginModel login)
+	public bool ValidateVipUser(string username, string password)
 	{
-		if (ValidateVipUser(login.Username, login.Password))
-		{
-			var token = GenerateJwtToken(login.Username, isVip: true);
-			return Ok(new { token });
-		}
-		else 
-		{
-			var token = GenerateJwtToken(login.Username, isVip: false);
-			return Ok(new { token });
-		}
-
-		
-	}
-
-	private bool ValidateVipUser(string username, string password)
-	{
-		// Add your VIP user validation logic here
+		// Add your VIP user validation logic here (e.g., check against DB)
 		return username == "vipuser" && password == "vippassword";
 	}
 
-	private string GenerateJwtToken(string username, bool isVip)
+	public string GenerateJwtToken(string username, bool isVip)
 	{
 		var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
 		var claims = new List<Claim>
@@ -68,10 +49,4 @@ public class AuthController : ControllerBase
 
 		return tokenHandler.WriteToken(token);
 	}
-}
-
-public class LoginModel
-{
-	public string Username { get; set; }
-	public string Password { get; set; }
 }
