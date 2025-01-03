@@ -1,33 +1,54 @@
 ﻿using Asp.Versioning;
+using FeatureManagementFilters.Models;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
+using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using FluentValidation.Results;
 
 namespace FeatureManagementFilters.Controllers.V2
 
 {
-	//[ApiVersion("2.0")]
+
 	[ApiController]
 	[Route("api/v{version:apiVersion}/[controller]")]
 	
 	public class GreetingController : ControllerBase
 	{
 		private readonly IFeatureManagerSnapshot _featureManager;
+	
 
 		public GreetingController(IFeatureManagerSnapshot featureManager)
 		{
+			
 			_featureManager = featureManager;
 		}
-	//	[MapToApiVersion("2.0")]
-		[HttpGet("custom-greeting")]
-		public async Task<IActionResult> GetCustomGreeting()
+
+		[HttpPost("custom-greeting")]
+		public async Task<Results<Ok<string> , BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting([AsParameters] Greeting greeting)
 		{
-			if (await _featureManager.IsEnabledAsync("CustomGreeting"))
+			var _validator=new GreetingValidator();
+			// Validate using the custom ValidateAsyncAndReturnProblem method
+			var validationProblem = await _validator.ValidateAsyncAndReturnProblem(greeting);
+
+			if (validationProblem != null)
 			{
-				return Ok("Hello VIP user, this is your custom greeting V2!");
+		
+				return TypedResults.BadRequest(validationProblem);
 			}
 
-			return Ok("Hello Anonymous user V2!");
+			
+			if (await _featureManager.IsEnabledAsync("CustomGreeting"))
+			{
+				return TypedResults.Ok($"Hello VIP user {greeting.Fullname}, this is your custom greeting V3!");
+			}
+
+			return TypedResults.Ok("Hello Anonymous user V3!");
 		}
 	}
 }
+
