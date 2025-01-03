@@ -29,6 +29,9 @@ namespace FeatureManagementFilters.Controllers.V2
 		}
 
 		[HttpPost("custom-greeting")]
+		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))] // Ok<string>
+		[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))] // BadRequest<ValidationProblemDetails>
+		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))] // NotFound<string>	
 		public async Task<Results<Ok<string> , BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting([AsParameters] Greeting greeting)
 		{
 			var _validator=new GreetingValidator();
