@@ -20,37 +20,38 @@ namespace FeatureManagementFilters.Controllers.V2
 	public class GreetingController : ControllerBase
 	{
 		private readonly IFeatureManagerSnapshot _featureManager;
+		private readonly GreetingValidator _validator;
 	
 
-		public GreetingController(IFeatureManagerSnapshot featureManager)
+		public GreetingController(IFeatureManagerSnapshot featureManager, GreetingValidator validator)
 		{
 			
 			_featureManager = featureManager;
+			_validator=validator;
 		}
 
 		[HttpPost("custom-greeting")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))] // Ok<string>
 		[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))] // BadRequest<ValidationProblemDetails>
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))] // NotFound<string>	
-		public async Task<Results<Ok<string> , BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting([AsParameters] Greeting greeting)
+		public async Task<Results<Ok<string> , BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting( Greeting greeting)
 		{
-			var _validator=new GreetingValidator();
-			// Validate using the custom ValidateAsyncAndReturnProblem method
-			var validationProblem = await _validator.ValidateAsyncAndReturnProblem(greeting);
+			
+			var validationResult = await _validator.ValidatWithResultAsync(greeting);
 
-			if (validationProblem != null)
+			if (!validationResult.IsValid)
 			{
 		
-				return TypedResults.BadRequest(validationProblem);
+				return TypedResults.BadRequest(validationResult.ProblemDetails);
 			}
 
 			
 			if (await _featureManager.IsEnabledAsync("CustomGreeting"))
 			{
-				return TypedResults.Ok($"Hello VIP user {greeting.Fullname}, this is your custom greeting V3!");
+				return TypedResults.Ok($"Hello VIP user {greeting.Fullname}, this is your custom greeting V2!");
 			}
 
-			return TypedResults.Ok("Hello Anonymous user V3!");
+			return TypedResults.Ok("Hello Anonymous user V2!");
 		}
 	}
 }

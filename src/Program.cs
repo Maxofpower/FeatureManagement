@@ -1,9 +1,21 @@
 using Asp.Versioning.ApiExplorer;
 using FeatureManagementFilters.Extensions;
 using FeatureManagementFilters.Services;
+using FeatureManagementFilters.Validator;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using FeatureManagementFilters.Models;
+using Asp.Versioning;
+using Asp.Versioning.Builder;
+using Asp.Versioning.Conventions;
+using FeatureManagementFilters.API;
+using FeatureManagementFilters.API.V2;
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +35,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor(); // Register IHttpContextAccessor
 
+
+//Fluent Validator
+builder.Services.AddFluentValidationAutoValidation()
+				.AddValidatorsFromAssemblyContaining<Program>();
 // Add Swagger configuration
 builder.Services.AddSwaggerConfiguration();
 
@@ -62,6 +78,9 @@ void ConfigureRequestPipeline(WebApplication app)
 	app.MapControllers();
 }
 #endregion
+
+
+app.MapGreetingApiV2();
 
 app.Run();
 

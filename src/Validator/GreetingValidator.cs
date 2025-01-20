@@ -1,18 +1,27 @@
 ﻿using FeatureManagementFilters.Models;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using FeatureManagementFilters.Validator;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 
-public class GreetingValidator : AbstractValidator<Greeting>
+
+public class GreetingValidator : BaseValidator<Greeting>
 {
-	public GreetingValidator()
+	public readonly ILogger<GreetingValidator> _logger;
+	public ILogger<GreetingValidator> Logger  => _logger;
+
+	public GreetingValidator(ILogger<GreetingValidator> logger)
 	{
-		RuleFor(x => x.Fullname)
+		_logger = logger;
+	         RuleFor(x => x.Fullname)
 			.NotEmpty().WithMessage("FullName is required.")
 			.NotNull().WithMessage("FullName is required.")
 			.Length(1, 100).WithMessage("FullName must be between 1 and 100 characters.");
-	}
+		
+}
 
-	public async Task<ValidationProblemDetails?> ValidateAsyncAndReturnProblem(Greeting item)
+	public async Task<ValidationResult> ValidatWithResultAsync(Greeting item)
 	{
 		var validationResult = await ValidateAsync(item);
 
@@ -25,15 +34,19 @@ public class GreetingValidator : AbstractValidator<Greeting>
 					group => group.Select(e => e.ErrorMessage).ToArray()
 				);
 
-			return new ValidationProblemDetails
+			_logger.LogError($"validation error on {nameof(Greeting)}: {validationErrors}");
+
+			var problemDetails = new ValidationProblemDetails
 			{
 				Status = StatusCodes.Status400BadRequest,
 				Title = "One or more validation errors occurred.",
 				Errors = validationErrors
 			};
+
+			return ValidationResult.Failure(problemDetails);
 		}
 
-		// Return null if validation is successful
-		return null;
+		return ValidationResult.Success();
 	}
+
 }

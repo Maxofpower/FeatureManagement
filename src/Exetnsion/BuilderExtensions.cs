@@ -103,7 +103,7 @@ namespace FeatureManagementFilters.Extensions
 		{
 			services.AddApiVersioning(options =>
 			{
-				options.AssumeDefaultVersionWhenUnspecified = true;
+				//options.AssumeDefaultVersionWhenUnspecified = true;
 				options.DefaultApiVersion = new ApiVersion(1, 0);
 				options.ReportApiVersions = true;
 				options.ApiVersionReader = ApiVersionReader.Combine(
@@ -111,17 +111,19 @@ namespace FeatureManagementFilters.Extensions
 					new HeaderApiVersionReader("X-Version"),
 					new UrlSegmentApiVersionReader()
 				);
-			}).AddMvc(
+			})
+			.AddApiExplorer(options =>
+			{
+				options.GroupNameFormat = "'v'V";
+		   	options.SubstituteApiVersionInUrl = true;
+			})
+			.AddMvc(
 				options =>
 				{
 					// automatically applies an api version namespace onventions
 					options.Conventions.Add(new VersionByNamespaceConvention());
-				})
-				.AddApiExplorer(options =>
-			{
-				options.GroupNameFormat = "'v'V";
-				options.SubstituteApiVersionInUrl = true;
-			});
+				});
+			
 		}
 	}
 }
