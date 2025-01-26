@@ -1,33 +1,33 @@
 using Asp.Versioning.ApiExplorer;
+using FeatureManagementFilters.API.V2;
 using FeatureManagementFilters.Extensions;
-using FeatureManagementFilters.Services;
-using FeatureManagementFilters.Validator;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Microsoft.FeatureManagement;
+using FeatureManagementFilters.Infrastructure;
+using FeatureManagementFilters.Infrastructure.Initializers;
+using FeatureManagementFilters.Services.Authentication;
+using FeatureManagementFilters.Services.ProductService;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using FeatureManagementFilters.Models;
-using Asp.Versioning;
-using Asp.Versioning.Builder;
-using Asp.Versioning.Conventions;
-using FeatureManagementFilters.API;
-using FeatureManagementFilters.API.V2;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Use the generic method for JWT Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
+builder.Services.AddMemoryCache(); // This registers IMemoryCache
+builder.Services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
+
 // Use the generic method for feature management
 builder.Services.AddFeatureManagementWithFilters<UseGreetingFilter>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();  // Registering the AuthService
 
-// Use the generic method for API versioning
+builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddScoped<IAppInitializer, ProductPromotionInitializer>();
+
+builder.Services.AddHostedService<AppInitializer>();
+
+
 builder.Services.AddApiVersioningWithReader();
 
 // Add controllers and other necessary services

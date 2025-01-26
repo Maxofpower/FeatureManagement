@@ -2,14 +2,9 @@
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Conventions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace FeatureManagementFilters.Extensions
@@ -115,7 +110,7 @@ namespace FeatureManagementFilters.Extensions
 			.AddApiExplorer(options =>
 			{
 				options.GroupNameFormat = "'v'V";
-		   	options.SubstituteApiVersionInUrl = true;
+				options.SubstituteApiVersionInUrl = true;
 			})
 			.AddMvc(
 				options =>
@@ -123,7 +118,7 @@ namespace FeatureManagementFilters.Extensions
 					// automatically applies an api version namespace onventions
 					options.Conventions.Add(new VersionByNamespaceConvention());
 				});
-			
+
 		}
 	}
 }

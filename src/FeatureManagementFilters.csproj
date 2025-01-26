@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
+	  <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-	  <LangVersion>12</LangVersion>
+	  <LangVersion>13</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

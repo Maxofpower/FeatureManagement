@@ -1,7 +1,6 @@
-﻿using Asp.Versioning.Builder;
-using Asp.Versioning.Conventions;
+﻿using Asp.Versioning.Conventions;
 using FeatureManagementFilters.Models;
-using Microsoft.AspNetCore.Http;
+using FeatureManagementFilters.Services.ProductService;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
@@ -15,14 +14,15 @@ namespace FeatureManagementFilters.API.V2
 		{
 			// Create a version set
 			var apiVersionSet = app.NewApiVersionSet()
-								   .HasApiVersion(2.0)  
+								   .HasApiVersion(2.0)
 								   .ReportApiVersions()
 								   .Build();
 
 			var api = app.MapGroup("api/v{version:apiVersion}")
-		     .WithApiVersionSet(apiVersionSet)
+			 .WithApiVersionSet(apiVersionSet)
 			 .MapToApiVersion(2.0);
 			api.MapPost("/minimal-custom-greeting", GetCustomGreeting);
+			api.MapGet("/product-promotion", GetProductPromotion);
 
 
 			return api;
@@ -50,7 +50,25 @@ namespace FeatureManagementFilters.API.V2
 
 			return TypedResults.Ok("Hello Anonymous user!");
 		}
+		public static async Task<Results<Ok<IList<ProductPromotion>>, NotFound<string>>> GetProductPromotion(
+	 IProductService productService)
+		{
+			try
+			{
+				var promotions = await productService.GetProductPromotionAsync();
+
+				// Return TypedResults.Ok with a list of ProductPromotion
+				return TypedResults.Ok(promotions);
+			}
+			catch
+			{
+				// Return TypedResults.NotFound with an error message
+				return TypedResults.NotFound("An error occurred while fetching promotions.");
+			}
+		}
 	}
+
+
 }
 
 

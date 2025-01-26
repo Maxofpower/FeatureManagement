@@ -1,5 +1,4 @@
-﻿using FeatureManagementFilters.Services;
-using Microsoft.Extensions.Configuration;
+﻿using FeatureManagementFilters.Services.Authentication;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

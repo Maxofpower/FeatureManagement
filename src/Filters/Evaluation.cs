@@ -1,10 +1,4 @@
 ﻿using Microsoft.FeatureManagement;
-using Microsoft.FeatureManagement.FeatureFilters;
-using System;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 [FilterAlias("UseGreeting")]
 public class UseGreetingFilter : IFeatureFilter

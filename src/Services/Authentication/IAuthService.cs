@@ -1,4 +1,4 @@
-﻿namespace FeatureManagementFilters.Services
+﻿namespace FeatureManagementFilters.Services.Authentication
 {
 	public interface IAuthService
 	{

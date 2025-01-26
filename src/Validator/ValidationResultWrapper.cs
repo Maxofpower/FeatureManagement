@@ -3,7 +3,7 @@
 public class ValidationResult
 {
 	public bool IsValid { get; set; }
-	public ValidationProblemDetails? ProblemDetails { get; set; }
+	public ValidationProblemDetails ProblemDetails { get; set; }
 
 	public static ValidationResult Success() =>
 		new ValidationResult { IsValid = true };

@@ -1,25 +1,23 @@
 ﻿using FeatureManagementFilters.Models;
+using FeatureManagementFilters.Validator;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using FeatureManagementFilters.Validator;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.Logging;
 
 
 public class GreetingValidator : BaseValidator<Greeting>
 {
 	public readonly ILogger<GreetingValidator> _logger;
-	public ILogger<GreetingValidator> Logger  => _logger;
+	public ILogger<GreetingValidator> Logger => _logger;
 
 	public GreetingValidator(ILogger<GreetingValidator> logger)
 	{
 		_logger = logger;
-	         RuleFor(x => x.Fullname)
-			.NotEmpty().WithMessage("FullName is required.")
-			.NotNull().WithMessage("FullName is required.")
-			.Length(1, 100).WithMessage("FullName must be between 1 and 100 characters.");
-		
-}
+		RuleFor(x => x.Fullname)
+	   .NotEmpty().WithMessage("FullName is required.")
+	   .NotNull().WithMessage("FullName is required.")
+	   .Length(1, 100).WithMessage("FullName must be between 1 and 100 characters.");
+
+	}
 
 	public async Task<ValidationResult> ValidatWithResultAsync(Greeting item)
 	{

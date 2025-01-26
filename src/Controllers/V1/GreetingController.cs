@@ -1,7 +1,5 @@
-﻿using Asp.Versioning;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
-using System.Threading.Tasks;
 
 namespace FeatureManagementFilters.Controllers.V1
 
@@ -12,22 +10,22 @@ namespace FeatureManagementFilters.Controllers.V1
 
 	public class GreetingController : ControllerBase
 	{
-	private readonly IFeatureManagerSnapshot _featureManager;
+		private readonly IFeatureManagerSnapshot _featureManager;
 
-	public GreetingController(IFeatureManagerSnapshot featureManager)
-	{
-		_featureManager = featureManager;
-	}
-  //  [MapToApiVersion("1.0")]
-	[HttpGet("custom-greeting")]
-	public async Task<IActionResult> GetCustomGreeting()
-	{
-		if (await _featureManager.IsEnabledAsync("CustomGreeting"))
+		public GreetingController(IFeatureManagerSnapshot featureManager)
 		{
-			return Ok("Hello VIP user, this is your custom greeting!");
+			_featureManager = featureManager;
 		}
+		//  [MapToApiVersion("1.0")]
+		[HttpGet("custom-greeting")]
+		public async Task<IActionResult> GetCustomGreeting()
+		{
+			if (await _featureManager.IsEnabledAsync("CustomGreeting"))
+			{
+				return Ok("Hello VIP user, this is your custom greeting!");
+			}
 
-		return Ok("Hello Anonymous user!");
-	}
+			return Ok("Hello Anonymous user!");
+		}
 	}
 }
