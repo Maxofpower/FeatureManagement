@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
-namespace FeatureManagementFilters.Extensions
+namespace FeatureManagementFilters.Infrastructure.Exetnsion
 {
 	public static class ServiceConfigurationExtensions
 	{
@@ -56,7 +56,7 @@ namespace FeatureManagementFilters.Extensions
 				var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
 				foreach (var description in provider.ApiVersionDescriptions)
 				{
-					c.SwaggerDoc(description.GroupName, new Microsoft.OpenApi.Models.OpenApiInfo
+					c.SwaggerDoc(description.GroupName, new OpenApiInfo
 					{
 						Title = "API",
 						Version = description.ApiVersion.ToString()

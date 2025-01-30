@@ -130,6 +130,29 @@ namespace FeatureManagementFilters.Infrastructure
 
 			return result;
 		}
+		/// <summary>
+		/// Get a cached item. 
+		/// </summary>
+		/// <typeparam name="T">Type of cached item</typeparam>
+		/// <param name="key">Cache key</param>
+		/// <returns>
+		/// A task that represents the asynchronous operation
+		/// The task result contains the cached value associated with the specified key
+		/// </returns>
+		public Task<T> TryGetAsync<T>(CacheKey key)
+		{
+			if ((key?.CacheTime ?? 0) <= 0)
+				return Task.FromResult<T>(default); // Return null for invalid cache time
+
+			if (_memoryCache.TryGetValue(key.Key, out T result))
+			{
+				Console.WriteLine($"==> Cache hit for key: {key.Key}");
+				return Task.FromResult(result);
+			}
+			Console.WriteLine($"==> Cache miss for key: {key.Key}. Loading data...");
+
+			return Task.FromResult<T>(default);
+		}
 
 		/// <summary>
 		/// Get a cached item. If it's not in the cache yet, then load and cache it

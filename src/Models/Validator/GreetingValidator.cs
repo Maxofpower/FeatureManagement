@@ -1,5 +1,5 @@
 ﻿using FeatureManagementFilters.Models;
-using FeatureManagementFilters.Validator;
+using FeatureManagementFilters.Models.Validator;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 

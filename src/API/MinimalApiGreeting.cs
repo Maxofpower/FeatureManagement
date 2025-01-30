@@ -23,6 +23,8 @@ namespace FeatureManagementFilters.API.V2
 			 .MapToApiVersion(2.0);
 			api.MapPost("/minimal-custom-greeting", GetCustomGreeting);
 			api.MapGet("/product-promotion", GetProductPromotion);
+			api.MapGet("/product-recommendation", GetProductRocemmendation);
+
 
 
 			return api;
@@ -66,9 +68,24 @@ namespace FeatureManagementFilters.API.V2
 				return TypedResults.NotFound("An error occurred while fetching promotions.");
 			}
 		}
+		public static async Task<Results<Ok<List<ProductPromotion>>, NotFound<string>>> GetProductRocemmendation(
+	 IProductService productService)
+		{
+			try
+			{
+				var recommedation = await productService.GetProductRocemmendationAsync();
+
+				// Return TypedResults.Ok with a list of ProductPromotion
+				return TypedResults.Ok(recommedation);
+			}
+			catch
+			{
+				// Return TypedResults.NotFound with an error message
+				return TypedResults.NotFound("An error occurred while fetching promotions.");
+			}
+		}
+
 	}
-
-
 }
 
 

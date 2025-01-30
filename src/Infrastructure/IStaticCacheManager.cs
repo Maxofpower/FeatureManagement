@@ -21,6 +21,16 @@
 		Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire);
 
 		/// <summary>
+		/// Get a cached item.
+		/// </summary>
+		/// <typeparam name="T">Type of cached item</typeparam>
+		/// <param name="key">Cache key</param>
+		/// <returns>
+		/// A task that represents the asynchronous operation
+		/// The task result contains the cached value associated with the specified key
+		/// </returns>
+		Task<T> TryGetAsync<T>(CacheKey key);
+		/// <summary>
 		/// Get a cached item. If it's not in the cache yet, then load and cache it
 		/// </summary>
 		/// <typeparam name="T">Type of cached item</typeparam>

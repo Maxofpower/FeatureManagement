@@ -1,7 +1,7 @@
 using Asp.Versioning.ApiExplorer;
 using FeatureManagementFilters.API.V2;
-using FeatureManagementFilters.Extensions;
 using FeatureManagementFilters.Infrastructure;
+using FeatureManagementFilters.Infrastructure.Exetnsion;
 using FeatureManagementFilters.Infrastructure.Initializers;
 using FeatureManagementFilters.Services.Authentication;
 using FeatureManagementFilters.Services.ProductService;
@@ -43,6 +43,8 @@ builder.Services.AddFluentValidationAutoValidation()
 builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();
+
+app.UseMiddleware<RecommendationCacheMiddleware>();
 
 // Configure middleware and endpoints
 ConfigureSwaggerUI(app);

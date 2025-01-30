@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace FeatureManagementFilters.Validator
+namespace FeatureManagementFilters.Models.Validator
 {
 	public abstract class BaseValidator<TModel> : AbstractValidator<TModel> where TModel : class
 	{
