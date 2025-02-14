@@ -31,6 +31,7 @@ public class AuthService : IAuthService
 
 		if (isVip)
 		{
+			//just for test purpose !
 			claims.Add(new Claim("VIP", "true"));
 		}
 
