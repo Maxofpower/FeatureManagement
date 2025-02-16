@@ -7,6 +7,7 @@ using FeatureManagementFilters.Services.Authentication;
 using FeatureManagementFilters.Services.ProductService;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddMemoryCache(); // This registers IMemoryCache
+
+
 builder.Services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
 
 // Use the generic method for feature management
@@ -44,7 +47,17 @@ builder.Services.AddSwaggerConfiguration();
 
 var app = builder.Build();
 
-app.UseMiddleware<RecommendationCacheMiddleware>();
+//To Present middleware dynamic caching example
+// Resolve IFeatureManager to check the feature flag
+var featureManager = app.Services.GetRequiredService<IFeatureManager>();
+
+// Check if the feature flag is enabled
+if (await featureManager.IsEnabledAsync("RecommendationCacheMiddleware"))
+{
+	// Add the middleware if the feature flag is enabled
+	app.UseMiddleware<RecommendationCacheMiddleware>();
+}
+
 
 // Configure middleware and endpoints
 ConfigureSwaggerUI(app);

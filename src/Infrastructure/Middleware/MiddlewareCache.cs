@@ -17,8 +17,8 @@ public class RecommendationCacheMiddleware
 	public async Task InvokeAsync(HttpContext context)
 	{
 		// Cache only GET requests
-		if (context.Request.Method == HttpMethods.Get 
-			&& context.Request.Path.Equals("/api/v2/product-recommendation")) 	
+		if (context.Request.Path.Equals("/api/v2/product-recommendation")
+			&& context.Request.Method == HttpMethods.Get) 	
 		{
 			// Dynamically generate a cache key based on user-specific data
 			var cacheKey = GenerateUserSpecificCacheKey(context);

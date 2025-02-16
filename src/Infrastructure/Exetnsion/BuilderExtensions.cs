@@ -40,7 +40,6 @@ namespace FeatureManagementFilters.Infrastructure.Exetnsion
 			});
 		}
 
-		// Generic method to configure Feature Management
 		// Generic method for configuring Feature Management with feature filters
 		public static void AddFeatureManagementWithFilters<T>(this IServiceCollection services)
 			where T : IFeatureFilterMetadata // Ensure T implements IFeatureFilterMetadata
