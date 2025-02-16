@@ -4,6 +4,7 @@ using FeatureManagementFilters.Infrastructure;
 using FeatureManagementFilters.Infrastructure.Exetnsion;
 using FeatureManagementFilters.Infrastructure.Initializers;
 using FeatureManagementFilters.Services.Authentication;
+using FeatureManagementFilters.Services.FeatureToggleService;
 using FeatureManagementFilters.Services.ProductService;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -27,6 +28,9 @@ builder.Services.AddScoped<IAuthService, AuthService>();  // Registering the Aut
 builder.Services.AddScoped<IProductService, ProductService>();
 
 builder.Services.AddScoped<IAppInitializer, ProductPromotionInitializer>();
+
+builder.Services.AddScoped<IFeatureToggleService, FeatureToggleService>();
+
 
 builder.Services.AddHostedService<AppInitializer>();
 

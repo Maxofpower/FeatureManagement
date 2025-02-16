@@ -11,6 +11,8 @@ public class UseGreetingFilter : IFeatureFilter
 	}
 	public Task<bool> EvaluateAsync(FeatureFilterEvaluationContext context)
 	{
+
+
 		var httpContext = _httpContext?.HttpContext;
 
 		if (httpContext?.User?.Claims != null)

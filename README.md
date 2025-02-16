@@ -3,6 +3,7 @@
 ## Overview
 
 This repository demonstrates how to implement advanced feature management in an ASP.NET Core application using feature filters. By leveraging feature filters, you can enable or disable features based on specific conditions such as user claims, providing a tailored experience for different user segments.
+This repository is a central hub for every feature, technique, and approach I introduce on LinkedIn. It serves as a practical, hands-on resource where you can explore, test, and implement advanced concepts in .NET and ASP.NET Core. Each technique is demonstrated with full code examples, , and real-world use cases.
 
 ## How to Use
 
