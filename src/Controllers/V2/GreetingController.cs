@@ -1,4 +1,6 @@
-﻿using FeatureManagementFilters.Models;
+﻿
+using FeatureManagementFilters.Models;
+using FeatureManagementFilters.Services.FeatureToggleService;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
@@ -14,15 +16,20 @@ namespace FeatureManagementFilters.Controllers.V2
 	{
 		private readonly IFeatureManagerSnapshot _featureManager;
 		private readonly GreetingValidator _validator;
+		private readonly IFeatureToggleService _featureToggleService;
 
 
-		public GreetingController(IFeatureManagerSnapshot featureManager, GreetingValidator validator)
+		public GreetingController(IFeatureManagerSnapshot featureManager,
+			GreetingValidator validator
+			, IFeatureToggleService featureToggleService)
 		{
 
 			_featureManager = featureManager;
 			_validator = validator;
+			_featureToggleService = featureToggleService;
 		}
 
+		//leveraging coR pattern with some static rules
 		[HttpPost("custom-greeting")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))] // Ok<string>
 		[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))] // BadRequest<ValidationProblemDetails>
@@ -38,14 +45,20 @@ namespace FeatureManagementFilters.Controllers.V2
 				return TypedResults.BadRequest(validationResult.ProblemDetails);
 			}
 
+			//for testing purpose -  a static customer
+			var user=new  User("Admin", true, false);
 
-			if (await _featureManager.IsEnabledAsync("CustomGreeting"))
+			bool greetingAccess =await _featureToggleService.CanAccessFeatureAsync(user); // ✅ Evaluates all rules
+
+			if (greetingAccess)
 			{
 				return TypedResults.Ok($"Hello VIP user {greeting.Fullname}, this is your custom greeting V2!");
 			}
 
 			return TypedResults.Ok("Hello Anonymous user V2!");
 		}
+
+	
 	}
 }
 
