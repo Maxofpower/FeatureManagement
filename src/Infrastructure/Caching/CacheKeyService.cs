@@ -1,5 +1,6 @@
 ﻿namespace FeatureManagementFilters.Infrastructure
 {
+	using FeatureManagementFilters.Infrastructure.Caching;
 	using FeatureManagementFilters.Models;
 	using System.Collections.Generic;
 	using System.Globalization;

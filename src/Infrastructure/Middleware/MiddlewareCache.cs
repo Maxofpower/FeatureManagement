@@ -1,4 +1,4 @@
-﻿using FeatureManagementFilters.Infrastructure;
+﻿using FeatureManagementFilters.Infrastructure.Caching;
 using FeatureManagementFilters.Models;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;

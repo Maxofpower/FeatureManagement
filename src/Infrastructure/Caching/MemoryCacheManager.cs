@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Concurrent;
-namespace FeatureManagementFilters.Infrastructure
+namespace FeatureManagementFilters.Infrastructure.Caching
 {
 
 	/// <summary>
