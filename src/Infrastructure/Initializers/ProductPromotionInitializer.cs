@@ -35,7 +35,7 @@ namespace FeatureManagementFilters.Infrastructure.Initializers
 			try
 			{
 				//  Read-through caching
-				var promotions = await productService.GetProductPromotionAsync(cancellationToken);
+				var promotions = await productService.GetProductPromotionAsync(false,cancellationToken);
 				logger.LogInformation(" ==> Product Promotions initialized successfully.");
 			}
 			catch (Exception ex)

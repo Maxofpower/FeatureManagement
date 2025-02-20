@@ -1,4 +1,5 @@
-﻿using FeatureManagementFilters.Services.Authentication;
+﻿using FeatureManagementFilters.Models;
+using FeatureManagementFilters.Services.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeatureManagementFilters.Controllers.V2
@@ -16,7 +17,7 @@ namespace FeatureManagementFilters.Controllers.V2
 		}
 
 		[HttpPost("login")]
-		public IActionResult Login([FromBody] LoginModel login)
+		public IActionResult Login([FromBody] Login login)
 		{
 			if (_authService.ValidateVipUser(login.Username, login.Password))
 			{

@@ -1,4 +1,4 @@
-﻿namespace FeatureManagementFilters.Infrastructure
+﻿namespace FeatureManagementFilters.Infrastructure.Caching
 {
 
 

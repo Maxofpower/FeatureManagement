@@ -1,4 +1,4 @@
-﻿namespace FeatureManagementFilters.Infrastructure
+﻿namespace FeatureManagementFilters.Infrastructure.Caching
 {
 	/// <summary>
 	/// Represents key for caching objects
@@ -61,6 +61,10 @@
 		/// Gets or sets a cache time in minutes
 		/// </summary>
 		public int CacheTime { get; set; } = 1;
+		/// <summary>
+		/// Gets or sets a cache time in seconds
+		/// </summary>
+		public int CacheTimeSecond { get; set; } = 60;
 
 		#endregion
 	}

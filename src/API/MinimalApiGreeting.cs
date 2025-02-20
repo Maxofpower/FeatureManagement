@@ -53,11 +53,12 @@ namespace FeatureManagementFilters.API.V2
 			return TypedResults.Ok("Hello Anonymous user!");
 		}
 		public static async Task<Results<Ok<IList<ProductPromotion>>, NotFound<string>>> GetProductPromotion(
-	 IProductService productService)
+	         IProductService productService,  
+			 bool getFromMemCach = false)
 		{
 			try
 			{
-				var promotions = await productService.GetProductPromotionAsync();
+				var promotions = await productService.GetProductPromotionAsync(getFromMemCach);
 
 				// Return TypedResults.Ok with a list of ProductPromotion
 				return TypedResults.Ok(promotions);
