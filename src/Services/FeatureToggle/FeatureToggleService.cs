@@ -18,11 +18,10 @@ namespace FeatureManagementFilters.Services.FeatureToggleService
 
 		public async Task<bool> CanAccessFeatureAsync(User user)
 		{
+			_validateRules.AddRule(async user => await _featureManager.IsEnabledAsync("CustomGreeting"));
 			_validateRules.AddRule(user => Task.FromResult(user.Role == "Amin"));
 			_validateRules.AddRule(user => Task.FromResult(user.HasActiveSubscription));
-			_validateRules.AddRule(async user => await _featureManager.IsEnabledAsync("CustomGreeting"));
-
-			return await _featureManager.IsEnabledAsync("CustomGreeting") && await _validateRules.ValidateAsync(user);
+			return  await _validateRules.ValidateAsync(user);
 		}
 	}
 	public interface IFeatureToggleService

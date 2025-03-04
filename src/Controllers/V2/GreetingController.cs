@@ -37,7 +37,7 @@ namespace FeatureManagementFilters.Controllers.V2
 		public async Task<Results<Ok<string>, BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting(Greeting greeting)
 		{
 
-			var validationResult = await _validator.ValidatWithResultAsync(greeting);
+			var validationResult = await _validator.ValidateWithResultAsync(greeting);
 
 			if (!validationResult.IsValid)
 			{

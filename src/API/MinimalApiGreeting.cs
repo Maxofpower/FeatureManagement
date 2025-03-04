@@ -25,19 +25,20 @@ namespace FeatureManagementFilters.API.V2
 			api.MapGet("/product-promotion", GetProductPromotion);
 			api.MapGet("/product-recommendation", GetProductRocemmendation);
 
-
-
 			return api;
 		}
 		public static async Task<Results<Ok<string>, BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting
-			([AsParameters] Greeting greeting, GreetingValidator validator, IFeatureManager featureManager)
+			([AsParameters] Greeting greeting, 
+			GreetingValidator validator, 
+			IFeatureManager featureManager,
+			  ILogger<GreetingValidator> _logger)
 		{
 			// Use the validator to validate the incoming model
-			var validationResult = await validator.ValidatWithResultAsync(greeting);
+			var validationResult = await validator.ValidateWithResultAsync(greeting);
 
 			if (!validationResult.IsValid)
 			{
-				validator.Logger.LogWarning("validation error on {GreetingType}: {Errors}",
+				_logger.LogWarning("validation error on {GreetingType}: {Errors}",
 					nameof(Greeting), validationResult.ProblemDetails!.Errors);
 
 				// Return problem details if validation fails
@@ -52,6 +53,7 @@ namespace FeatureManagementFilters.API.V2
 
 			return TypedResults.Ok("Hello Anonymous user!");
 		}
+		
 		public static async Task<Results<Ok<IList<ProductPromotion>>, NotFound<string>>> GetProductPromotion(
 	         IProductService productService,  
 			 bool getFromMemCach = false)

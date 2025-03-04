@@ -2,12 +2,24 @@
 
 public class ValidationResult
 {
-	public bool IsValid { get; set; }
-	public ValidationProblemDetails ProblemDetails { get; set; }
+	public bool IsValid { get; }
+	public ValidationProblemDetails ProblemDetails { get; }
+
+	private ValidationResult(bool isValid, ValidationProblemDetails problemDetails = null)
+	{
+		IsValid = isValid;
+		ProblemDetails = problemDetails;
+	}
 
 	public static ValidationResult Success() =>
-		new ValidationResult { IsValid = true };
+		new ValidationResult(true);
 
-	public static ValidationResult Failure(ValidationProblemDetails problemDetails) =>
-		new ValidationResult { IsValid = false, ProblemDetails = problemDetails };
+	public static ValidationResult Failure(ValidationProblemDetails problemDetails)
+	{
+		ArgumentNullException.ThrowIfNull(problemDetails);
+
+		return new ValidationResult(false, problemDetails);
+	}
+
+	public bool HasErrors() => !IsValid && ProblemDetails != null;
 }

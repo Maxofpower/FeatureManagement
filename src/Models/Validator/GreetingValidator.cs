@@ -4,10 +4,10 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 
+
 public class GreetingValidator : BaseValidator<Greeting>
 {
-	public readonly ILogger<GreetingValidator> _logger;
-	public ILogger<GreetingValidator> Logger => _logger;
+	private readonly ILogger<GreetingValidator> _logger;
 
 	public GreetingValidator(ILogger<GreetingValidator> logger)
 	{
@@ -19,7 +19,7 @@ public class GreetingValidator : BaseValidator<Greeting>
 
 	}
 
-	public async Task<ValidationResult> ValidatWithResultAsync(Greeting item)
+	public async Task<ValidationResult> ValidateWithResultAsync(Greeting item)
 	{
 		var validationResult = await ValidateAsync(item);
 
