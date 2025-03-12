@@ -1,5 +1,4 @@
-﻿
-using FeatureManagementFilters.Models;
+﻿using FeatureManagementFilters.Models;
 using FeatureManagementFilters.Services.FeatureToggleService;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -46,9 +45,9 @@ namespace FeatureManagementFilters.Controllers.V2
 			}
 
 			//for testing purpose -  a static customer
-			var user=new  User("Admin", true, false);
+			var user = new User("Admin", true, false);
 
-			bool greetingAccess =await _featureToggleService.CanAccessFeatureAsync(user); // ✅ Evaluates all rules
+			bool greetingAccess = await _featureToggleService.CanAccessFeatureAsync(user); // ✅ Evaluates all rules
 
 			if (greetingAccess)
 			{
@@ -58,7 +57,7 @@ namespace FeatureManagementFilters.Controllers.V2
 			return TypedResults.Ok("Hello Anonymous user V2!");
 		}
 
-	
+
 	}
 }
 
