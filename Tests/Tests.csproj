@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2" />
-    <PackageReference Include="EnyimMemcachedCore" Version="3.3.2" />
+    <PackageReference Include="EnyimMemcachedCore" Version="3.3.3-pre2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="Testcontainers" Version="4.2.0" />
     <PackageReference Include="xunit" Version="2.9.2" />
@@ -17,7 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\FeatureManagementFilters.csproj" />
+    <ProjectReference Include="..\FeatureFusion.ApiGateway\FeatureFusion.ApiGateway.csproj" />
+    <ProjectReference Include="..\src\FeatureFusion.csproj" />
   </ItemGroup>
 
   <ItemGroup>

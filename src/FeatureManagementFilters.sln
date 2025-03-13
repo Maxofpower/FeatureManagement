@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureManagementFilters", "FeatureManagementFilters.csproj", "{BA818D80-DD3B-4346-BB33-75059D677BDB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFusion", "FeatureFusion.csproj", "{BA818D80-DD3B-4346-BB33-75059D677BDB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\Tests\Tests.csproj", "{C9931582-369D-432D-8E3B-FA894A58DE26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFusion.ApiGateway", "..\FeatureFusion.ApiGateway\FeatureFusion.ApiGateway.csproj", "{BFD44F8B-EA4A-40D9-9533-0E7185897D99}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{C9931582-369D-432D-8E3B-FA894A58DE26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9931582-369D-432D-8E3B-FA894A58DE26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9931582-369D-432D-8E3B-FA894A58DE26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD44F8B-EA4A-40D9-9533-0E7185897D99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD44F8B-EA4A-40D9-9533-0E7185897D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD44F8B-EA4A-40D9-9533-0E7185897D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD44F8B-EA4A-40D9-9533-0E7185897D99}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

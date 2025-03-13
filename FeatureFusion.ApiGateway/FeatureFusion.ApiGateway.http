@@ -1,0 +1,6 @@
+@FeatureFusion.ApiGateway_HostAddress = http://localhost:5250
+
+GET {{FeatureFusion.ApiGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
