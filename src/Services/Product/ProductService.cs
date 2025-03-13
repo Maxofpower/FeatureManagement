@@ -34,7 +34,7 @@ namespace FeatureManagementFilters.Services.ProductService
 
 				if (getFromMemCach)
 				{
-					productPromotion = await _distributedCacheManager.GetAsync(cacheKey, async () =>
+					productPromotion = await _distributedCacheManager.GetValueOrCreateAsync(cacheKey, async () =>
 					{
 						var products = await GenerateSampleData();
 						return products;

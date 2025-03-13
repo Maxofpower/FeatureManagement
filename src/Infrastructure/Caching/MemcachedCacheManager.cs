@@ -18,13 +18,11 @@ public class MemcachedCacheManager : IDistributedCacheManager
 			_memcachedClient = memcachedClient;
 			_logger = logger;
 		}
-		public async Task<T> GetAsync<T>(CacheKey key, Func<Task<T>> acquire)
+		public async Task<T> GetValueOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire)
 		{
 			try
 			{
-				// 🚀 Use GetValueOrCreateAsync to handle cache misses and data fetching in one call
-				// 🛡️ Prevents cache stampedes: Ensures only one thread fetches data for a given key
-				// 🛡️ Handles race conditions: Internal locking ensures thread-safe cache updates
+				//  Use GetValueOrCreateAsync to handle cache misses and data fetching in one call
 				var cacheEntry = await _memcachedClient.GetValueOrCreateAsync(
 					key.Key, // Cache key
 					key.CacheTimeSecond, // Cache expiration time
@@ -36,9 +34,9 @@ public class MemcachedCacheManager : IDistributedCacheManager
 			}
 			catch (Exception ex)
 			{
-			// 🛑 Log errors and fallback to fetching fresh data
+			//  Log errors and fallback to fetching fresh data
 			_logger.LogError("Memcached Error {ex.Message}", ex.Message);
-				return await acquire(); // 🛠️ Fallback to DB
+				return await acquire(); // Fallback to Func (can be a db fetch)
 			}
 		}
 	    public async Task RefreshCacheAsync<T>(string key, Func<Task<T>> fetchFromDb, int cacheMinutes)

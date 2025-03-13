@@ -39,7 +39,7 @@ namespace Tests.FeatureFusion.UnitTest
 			await _fixture.MemcachedClient.SetAsync(key.Key, expectedValue, TimeSpan.FromMinutes(1));
 
 			// Act
-			var result = await _cacheManager.GetAsync(key, () => Task.FromResult("db-data"));
+			var result = await _cacheManager.GetValueOrCreateAsync(key, () => Task.FromResult("db-data"));
 
 			// Assert
 			Assert.Equal(expectedValue, result);
@@ -52,7 +52,7 @@ namespace Tests.FeatureFusion.UnitTest
 			var key = new CacheKey("missing-key");
 
 			// Act
-			var result = await _cacheManager.GetAsync(key, () => Task.FromResult("db-data"));
+			var result = await _cacheManager.GetValueOrCreateAsync(key, () => Task.FromResult("db-data"));
 
 			// Assert
 			Assert.Equal("db-data", result);
