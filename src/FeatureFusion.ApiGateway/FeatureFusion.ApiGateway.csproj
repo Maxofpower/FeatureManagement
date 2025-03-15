@@ -4,8 +4,8 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <BaseOutputPath>\bin</BaseOutputPath>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="EnyimMemcachedCore" Version="3.3.3-pre2" />
     <PackageReference Include="Polly" Version="8.5.2" />
