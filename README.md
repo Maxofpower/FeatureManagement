@@ -1,35 +1,109 @@
-# Advanced Feature Management with Feature Filters in ASP.NET Core
 
+# 🚀 Advanced .NET Features Showcase  
 
-## Memcached Setup
+## Overview  
 
-To enable the **Memcached** feature, please run the following command:
+This repository is a **central hub** for all the advanced .NET and ASP.NET Core features I introduce on **LinkedIn**. It provides hands-on implementations of key concepts with real-world examples, allowing you to explore, test, and integrate them into your projects.  
 
+### 🔹 What's Inside?  
+- ✅ **Feature Management & Feature Flags**  
+- ⚡ **High-Performance Caching (Memcached, Redis, etc.)**  
+- 🚦 **Distributed Rate Limiting with YARP & Memcached**  
+- 🏗 **Advanced API Design & Middleware**  
+- 🔄 **Optimized Data Processing Techniques**  
+- 📈 **Performance Improvements & Best Practices**  
+- 🧩 **Design Patterns**  
+
+Each feature is structured for **easy exploration** and **practical implementation**.  
+
+---
+
+## ✨ Featured Example: Distributed Rate Limiting with YARP & Memcached  
+
+This example demonstrates **distributed rate limiting** using **YARP (Yet Another Reverse Proxy)** and **Memcached**. This approach ensures that API rate limits are enforced consistently across distributed instances.  
+
+### 🛠 Setup  
+
+#### 1️⃣ Start Memcached  
+Run the following command to spin up Memcached:  
+
+```
 docker-compose up -d
+```  
 
-## Overview
+#### 2️⃣ Configure YARP Rate Limiting  
+The **YARP reverse proxy** is configured to limit incoming requests based on **IP-based quotas stored in Memcached**.  
 
-This repository demonstrates how to implement advanced feature management in an ASP.NET Core application using feature filters. By leveraging feature filters, you can enable or disable features based on specific conditions such as user claims, providing a tailored experience for different user segments.
-This repository is a central hub for every feature, technique, and approach I introduce on LinkedIn. It serves as a practical, hands-on resource where you can explore, test, and implement advanced concepts in .NET and ASP.NET Core. Each technique is demonstrated with full code examples, , and real-world use cases.
+### 📌 Example Rate Limit Policy  
+- **100 requests per minute per IP**  
+- Requests exceeding the limit receive a `429 Too Many Requests` response  
 
-## How to Use
+#### 3️⃣ Test the Rate Limiter  
+Use a tool like **Postman** or **cURL** to send multiple requests:  
 
+```
+curl -X GET http://localhost:5000/api/resource -H "Authorization: Bearer <your_token>"
+```  
 
-Follow these steps to test the advanced feature management and VIP feature filtering:
+Once the limit is reached, you’ll receive:  
 
-### Step 1: Generate a JWT Token
+```json
+{
+  "error": "Too Many Requests"
+}
+```  
 
-To test the feature filter vip message, you need to generate a JWT token with a user claim indicating whether the user is a VIP. Use the following credentials:
+---
 
-- **Username**: `vipuser`
-- **Password**: `vippassword`
+## ✨ Featured Example: Advanced Feature Management with Feature Filters  
 
-### Step 2: Send a Request to the API
+This example demonstrates **feature management in ASP.NET Core** using feature filters. Feature filters allow conditional feature toggling based on factors like user claims, enabling personalized experiences.  
 
-Once you have the JWT token, send a request to the `/custom-greeting` API endpoint. Include the generated JWT token in the `Authorization` header as a Bearer token.
+### 🛠 Setup  
 
-### Example Request
+#### 1️⃣ Start Memcached  
+To enable the **Memcached-based feature toggle**, run:  
 
-```http
+```
+docker-compose up -d
+```  
+
+#### 2️⃣ Generate a JWT Token  
+To test VIP-based feature toggling, generate a JWT token using the following credentials:  
+- **Username**: `vipuser`  
+- **Password**: `vippassword`  
+
+#### 3️⃣ Send a Request  
+Once you have the JWT token, call the API:  
+
+```
 GET /custom-greeting
 Authorization: Bearer <your_jwt_token_here>
+```  
+
+---
+
+## 🧩 Design Patterns  
+
+This section contains **various design patterns** implemented in .NET, showcasing real-world use cases and best practices. Some of the patterns you'll find include:
+
+- **Singleton Pattern**  
+- **Factory Pattern**  
+- **Repository Pattern**  
+- **Strategy Pattern**  
+- **CoR Pattern**  
+- **Observer Pattern**  
+- **Dependency Injection**  
+
+Each pattern is demonstrated with clear code examples and explanations of when and why to use them.  
+
+---
+
+## 📌 Stay Updated  
+I regularly share **new features** and **deep-dive explanations** on **[LinkedIn](https://www.linkedin.com/in/mohammad-hasan)**. Follow along to stay up to date!  
+
+---
+
+🔹 **Contributions**: PRs and discussions are welcome!  
+🔹 **License**: MIT  
+
