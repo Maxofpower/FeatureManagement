@@ -17,9 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FeatureFusion.ApiGateway\FeatureFusion.ApiGateway.csproj" />
     <ProjectReference Include="..\src\FeatureFusion.ApiGateway\FeatureFusion.ApiGateway.csproj" />
-    <ProjectReference Include="..\src\FeatureFusion.csproj" />
     <ProjectReference Include="..\src\FeatureFusion\FeatureFusion.csproj" />
   </ItemGroup>
 
