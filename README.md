@@ -100,7 +100,7 @@ Each pattern is demonstrated with clear code examples and explanations of when a
 ---
 
 ## 📌 Stay Updated  
-I regularly share **new features** and **deep-dive explanations** on **[LinkedIn](https://www.linkedin.com/in/mohammad-hasan)**. Follow along to stay up to date!  
+I regularly share **new features** and **deep-dive explanations** on **[LinkedIn](https://www.linkedin.com/in/mhhoseini)**. Follow along to stay up to date!  
 
 ---
 
