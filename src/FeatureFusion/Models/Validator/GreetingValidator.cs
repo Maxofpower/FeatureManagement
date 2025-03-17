@@ -1,4 +1,4 @@
-﻿using FeatureManagementFilters.Models;
+﻿using FeatureFusion.Models;
 using FeatureManagementFilters.Models.Validator;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;

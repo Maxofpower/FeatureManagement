@@ -1,9 +1,11 @@
 using Asp.Versioning.ApiExplorer;
 using Enyim.Caching;
 using Enyim.Caching.Configuration;
+using FeatureFusion.Infrastructure.Exetnsion;
+using FeatureFusion.Infrastructure.ValidationProvider;
+using FeatureFusion.Models;
 using FeatureManagementFilters.API.V2;
 using FeatureManagementFilters.Infrastructure.Caching;
-using FeatureManagementFilters.Infrastructure.Exetnsion;
 using FeatureManagementFilters.Infrastructure.Initializers;
 using FeatureManagementFilters.Services.Authentication;
 using FeatureManagementFilters.Services.FeatureToggleService;
@@ -25,6 +27,8 @@ builder.Services.AddFeatureManagementWithFilters<UseGreetingFilter>();
 
 builder.Services.RegisterServices();
 
+// Register all validators in the current assembly
+//builder.Services.AddAllValidators();
 
 builder.Services.AddApiVersioningWithReader();
 
@@ -34,9 +38,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor(); // Register IHttpContextAccessor
 
 
-//Fluent Validator
-builder.Services.AddFluentValidationAutoValidation()
-				.AddValidatorsFromAssemblyContaining<Program>();
+
 // Add Swagger configuration
 builder.Services.AddSwaggerConfiguration();
 // Resolve IFeatureManager to check the feature flag
@@ -150,7 +152,7 @@ if (useMemcached)
 
 #endregion
 
-app.Run();
+	app.Run();
 
 public partial class Program { }
 

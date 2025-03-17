@@ -1,20 +1,29 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Conventions;
+using FeatureFusion.Infrastructure.ValidationProvider;
+using FeatureFusion.Models;
 using FeatureManagementFilters.Infrastructure.Caching;
 using FeatureManagementFilters.Infrastructure.Initializers;
+using FeatureManagementFilters.Models.Validator;
 using FeatureManagementFilters.Services.Authentication;
 using FeatureManagementFilters.Services.FeatureToggleService;
 using FeatureManagementFilters.Services.ProductService;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 
-namespace FeatureManagementFilters.Infrastructure.Exetnsion
+namespace FeatureFusion.Infrastructure.Exetnsion
 {
 	public static class ServiceConfigurationExtensions
 	{
@@ -129,17 +138,47 @@ namespace FeatureManagementFilters.Infrastructure.Exetnsion
 
 		public static void RegisterServices(this IServiceCollection services)
 		{
+
+			services.AddProblemDetails();
+
 			services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
 
 			services.AddSingleton<IDistributedCacheManager, MemcachedCacheManager>();
 
-			services.AddScoped<IAuthService, AuthService>();  
+			services.AddScoped<IAuthService, AuthService>();
 
 			services.AddScoped<IProductService, ProductService>();
 
 			services.AddScoped<IAppInitializer, ProductPromotionInitializer>();
 
 			services.AddScoped<IFeatureToggleService, FeatureToggleService>();
+
+			var validators = GetValidators();
+
+			//Fluent Validator
+			services.AddFluentValidationAutoValidation();
+
+			foreach (var validator in validators)
+			{
+				services.Add(
+					new ServiceDescriptor(
+						serviceType: typeof(IValidator),
+						implementationType: validator,
+						lifetime: ServiceLifetime.Singleton));
+
+				services.Add(
+				   new ServiceDescriptor(
+					   serviceType: validator,
+					   implementationType: validator,
+					   lifetime: ServiceLifetime.Singleton));
+			}
+
+			// services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
+			services.AddSingleton<IValidatorProvider, ValidatorProvider>();
+
+
+
 
 			services.AddHostedService<AppInitializer>();
 
@@ -161,6 +200,44 @@ namespace FeatureManagementFilters.Infrastructure.Exetnsion
 					duration = report.TotalDuration
 				}));
 			}
+		}
+		public static void AddAllValidators(this IServiceCollection services, params Assembly[] assemblies)
+		{
+			if (assemblies == null || assemblies.Length == 0)
+			{
+				// If no assemblies are provided, scan the current assembly
+				assemblies = new[] { Assembly.GetExecutingAssembly() };
+			}
+
+			foreach (var assembly in assemblies)
+			{
+				// Find all types that inherit from BaseValidator<T>
+				var validatorTypes = assembly.GetTypes()
+					.Where(t => t.BaseType != null &&
+								 t.BaseType.IsGenericType &&
+								 t.BaseType.GetGenericTypeDefinition() == typeof(BaseValidator<>))
+					.ToList();
+
+				foreach (var validatorType in validatorTypes)
+				{
+					// Get the generic type argument (TModel) from BaseValidator<TModel>
+					var modelType = validatorType.BaseType.GetGenericArguments()[0];
+
+					// Register the validator as IValidator<TModel>
+					var validatorInterface = typeof(IValidator<>).MakeGenericType(modelType);
+					services.AddScoped(validatorInterface, validatorType);
+				}
+			}
+		}
+		private static IEnumerable<Type> GetValidators()
+		{
+			Assembly[] assemblies =  new[] { Assembly.GetExecutingAssembly() } ;
+
+			var validators = assemblies.SelectMany(ass => ass.GetTypes())
+					.Where(typeof(IValidator).IsAssignableFrom)
+					.Where(t => !t.GetTypeInfo().IsAbstract);
+
+			return validators;
 		}
 	}
 }

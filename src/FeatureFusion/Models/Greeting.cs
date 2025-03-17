@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace FeatureManagementFilters.Models
+namespace FeatureFusion.Models
 {
 	public class Greeting
 	{

@@ -1,10 +1,11 @@
-﻿using FeatureManagementFilters.Models;
+﻿using FeatureFusion.Models;
+using FeatureManagementFilters.Models;
 using FeatureManagementFilters.Services.FeatureToggleService;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.FeatureManagement;
 
-namespace FeatureManagementFilters.Controllers.V2
+namespace FeatureFusion.Controllers.V2
 
 {
 
