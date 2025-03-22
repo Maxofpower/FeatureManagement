@@ -1,4 +1,5 @@
-﻿using FeatureFusion.Models;
+﻿using FeatureFusion.Infrastructure.Filters;
+using FeatureFusion.Models;
 using FeatureManagementFilters.Models;
 using FeatureManagementFilters.Services.FeatureToggleService;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -58,7 +59,10 @@ namespace FeatureFusion.Controllers.V2
 			return TypedResults.Ok("Hello Anonymous user V2!");
 		}
 
-
+		// to test idempotent-filter
+		
 	}
+
 }
+	
 

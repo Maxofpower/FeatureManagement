@@ -12,9 +12,11 @@ using FeatureManagementFilters.Services.FeatureToggleService;
 using FeatureManagementFilters.Services.ProductService;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.FeatureManagement;
 using System.ComponentModel.DataAnnotations;
+using static RedisSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,12 +58,25 @@ builder.Services
 
 builder.Services.AddEnyimMemcached();
 
+// Bind and validate Redis configuration
+var redisSection = builder.Configuration.GetSection("Redis");
+builder.Services
+	.AddOptions<RedisOptions>()
+	.Bind(redisSection)
+	.ValidateDataAnnotations()
+	.Validate(options => !string.IsNullOrEmpty(options.ConnectionString), "Redis connection string is required.")
+	.ValidateOnStart();
+
+
+builder.Services.AddCacheWithRedis(builder.Configuration);
+
 #endregion
 
 var app = builder.Build();
 var featureManager = app.Services.GetRequiredService<IFeatureManager>();
 //To Present middleware dynamic caching example
 var useMemcached = await featureManager.IsEnabledAsync("MemCachedEnabled");
+var  useRedis = await featureManager.IsEnabledAsync("IdempotencyEnabled");
 
 // Check if the feature flag is enabled
 if (await featureManager.IsEnabledAsync("RecommendationCacheMiddleware"))
@@ -111,7 +126,7 @@ void ConfigureRequestPipeline(WebApplication app)
 app.MapGreetingApiV2();
 
 #region memchached prestart up validation if enabled
-// Pre-startup validation
+// Pre-startup validation for memcached and redis
 if (useMemcached)
 {
 	using var scope = app.Services.CreateScope();
@@ -147,6 +162,20 @@ if (useMemcached)
 	{
 		logger.LogCritical(ex, "Memcached pre-startup validation failed");
 		throw; // Prevent application startup
+	}
+}
+if(useRedis)
+{
+	using var scope = app.Services.CreateScope();
+	var redis = scope.ServiceProvider.GetRequiredService<IDistributedCache>();
+	try
+	{
+		await redis.GetAsync("tese");
+	}
+	catch (Exception ex)
+	{
+		Console.WriteLine($"[Redis startup Error] {ex.Message}");
+		throw;
 	}
 }
 

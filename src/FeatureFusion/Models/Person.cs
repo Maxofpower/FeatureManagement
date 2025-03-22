@@ -1,10 +1,11 @@
-﻿using FeatureManagementFilters.Models.Validator;
+﻿using FeatureManagementFilters.Models;
+using FeatureManagementFilters.Models.Validator;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using System;
 namespace FeatureFusion.Models
 {
-	public class Person
+	public record Person : BaseEntity
 	{
 		public string Name { get; set; }
 		public int Age { get; set; }

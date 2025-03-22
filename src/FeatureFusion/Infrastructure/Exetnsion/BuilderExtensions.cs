@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Conventions;
+using FeatureFusion.Infrastructure.Caching;
 using FeatureFusion.Infrastructure.ValidationProvider;
 using FeatureFusion.Models;
 using FeatureManagementFilters.Infrastructure.Caching;
@@ -13,13 +14,17 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Text.Json;
 
@@ -107,6 +112,43 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 				});
 			});
 		}
+		public static void AddCacheWithRedis(this IServiceCollection services, IConfiguration configuration)
+		{
+			if (configuration == null)
+			{
+				throw new ArgumentNullException(nameof(configuration), "Configuration cannot be null.");
+			}
+
+			
+			var redisConfiguration = configuration["Redis:ConnectionString"];
+			if (string.IsNullOrEmpty(redisConfiguration))
+			{
+				throw new ArgumentNullException(nameof(redisConfiguration), "Redis connection string is missing in the configuration.");
+			}
+
+		
+			var redisInstanceName = configuration["Redis:InstanceName"] ?? "MyApp:";
+
+		
+			services.AddSingleton<IConnectionMultiplexer>(sp =>
+			{
+				var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConfiguration);
+				config.AbortOnConnectFail = false; // Continue even if Redis is unavailable
+				config.ConnectTimeout = 5000;
+				config.SyncTimeout = 5000; 
+				return ConnectionMultiplexer.Connect(config);
+			});
+
+		
+			services.AddStackExchangeRedisCache(options =>
+			{
+				options.ConnectionMultiplexerFactory = () =>
+					Task.FromResult(services.BuildServiceProvider().GetRequiredService<IConnectionMultiplexer>());
+				options.InstanceName = redisInstanceName;
+			});
+		}
+
+
 
 		// Generic method for API versioning
 		public static void AddApiVersioningWithReader(this IServiceCollection services)
@@ -144,6 +186,9 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 			services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
 
 			services.AddSingleton<IDistributedCacheManager, MemcachedCacheManager>();
+		
+			//TODO: for manual DistributeCache implementation
+			//services.AddKeyedSingleton<IDistributedCacheManager, RedisCacheManager>("redis");
 
 			services.AddScoped<IAuthService, AuthService>();
 
@@ -175,14 +220,15 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 
 			// services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
+			services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
+
 			services.AddSingleton<IValidatorProvider, ValidatorProvider>();
-
-
-
 
 			services.AddHostedService<AppInitializer>();
 
 		}
+
+
 		public static class HealthCheckExtensions
 		{
 			public static Task WriteResponse(HttpContext context, HealthReport report)
@@ -201,6 +247,7 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 				}));
 			}
 		}
+
 		public static void AddAllValidators(this IServiceCollection services, params Assembly[] assemblies)
 		{
 			if (assemblies == null || assemblies.Length == 0)
@@ -239,6 +286,8 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 
 			return validators;
 		}
+
+		
 	}
 }
 
