@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Enyim.Caching;
 using FeatureManagementFilters.Infrastructure.Caching;
+using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 
 
@@ -18,7 +20,7 @@ public class MemcachedCacheManager : IDistributedCacheManager
 			_memcachedClient = memcachedClient;
 			_logger = logger;
 		}
-		public async Task<T> GetValueOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire)
+		public async Task<T> GetValueOrCreateAsync<T>(CacheKey key, Func<Task<T>> acquire,CancellationToken cancellationToken=default)
 		{
 			try
 			{
@@ -49,8 +51,38 @@ public class MemcachedCacheManager : IDistributedCacheManager
 			catch (Exception ex)
 			{
 				Console.WriteLine($"[Memcached Refresh Error] {ex.Message}");
-			}
+			   throw;
+		}
 		}
 
+
+
+	public async Task RemoveAsync(string cacheKey, CancellationToken token)
+	{
+		try
+		{
+			await _memcachedClient.RemoveAsync(cacheKey);
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"[Memcached remove Error] {ex.Message}");
+			throw;
+		}
 	}
+
+	
+
+	public async Task SetAsync(string cacheKey, object value , CancellationToken cancellationToken)
+	{
+		try
+		{
+			await _memcachedClient.SetAsync(cacheKey,value, TimeSpan.FromMinutes(1));
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine($"[Memcached remove Error] {ex.Message}");
+			throw;
+		}
+	}
+}
 

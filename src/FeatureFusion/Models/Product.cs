@@ -7,5 +7,6 @@
 		public bool Published { get; init; }
 		public bool Deleted { get; init; }
 		public bool VisibleIndividually { get; init; }
+		public decimal Price { get; internal set; }
 	}
 }
