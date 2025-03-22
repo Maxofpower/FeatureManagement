@@ -6,7 +6,8 @@
 This repository is a **central hub** for all the advanced .NET and ASP.NET Core features I introduce on **LinkedIn**. It provides hands-on implementations of key concepts with real-world examples, allowing you to explore, test, and integrate them into your projects.  
 
 ### 🔹 What's Inside?  
-- ✅ **Feature Management & Feature Flags**  
+- ✅ **Feature Management & Feature Flags**
+- ✅ **IdempotentFusion**  
 - ⚡ **High-Performance Caching (Memcached, Redis, etc.)**  
 - 🚦 **Distributed Rate Limiting with YARP & Memcached**  
 - 🏗 **Advanced API Design & Middleware**  
