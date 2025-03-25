@@ -110,5 +110,4 @@ I regularly share **new features** and **deep-dive explanations** on **[LinkedIn
 ---
 
 🔹 **Contributions**: PRs and discussions are welcome!  
-🔹 **License**: MIT  
 
