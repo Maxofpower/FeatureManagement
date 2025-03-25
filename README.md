@@ -7,12 +7,16 @@ This repository is a **central hub** for all the advanced .NET and ASP.NET Core 
 
 ### 🔹 What's Inside?  
 - ✅ **Feature Management & Feature Flags**
-- ✅ **IdempotentFusion**  
-- ⚡ **High-Performance Caching (Memcached, Redis, etc.)**  
-- 🚦 **Distributed Rate Limiting with YARP & Memcached**  
-- 🏗 **Advanced API Design & Middleware**  
-- 🔄 **Optimized Data Processing Techniques**  
-- 📈 **Performance Improvements & Best Practices**  
+- ✅ **IdempotentFusion (Idempotent Api with optional lock)**  
+- ✅ **Api Versioning Strategies**  
+- ✅ **Generic and Reusable Api Validations**  
+- ✅ **Middleware Dynamic Caching**
+- ✅ **App Initializer**  
+- ✅ **High-Performance Caching (Memcached, Redis, etc.)**  
+- ✅ **Distributed Rate Limiting with YARP & Memcached**  
+- ✅ **Advanced API Design & Middleware**  
+- ✅ **Optimized Data Processing Techniques**  
+- ✅ **Performance Improvements & Best Practices**  
 - 🧩 **Design Patterns**  
 
 Each feature is structured for **easy exploration** and **practical implementation**.  
