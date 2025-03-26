@@ -16,6 +16,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.FeatureManagement;
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using static RedisSettings;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,21 +30,20 @@ builder.Services.AddFeatureManagementWithFilters<UseGreetingFilter>();
 
 builder.Services.RegisterServices();
 
+builder.Services.AddMediatorServices(Assembly.GetExecutingAssembly());
+
+
 // Register all validators in the current assembly
 //builder.Services.AddAllValidators();
 
 builder.Services.AddApiVersioningWithReader();
 
-// Add controllers and other necessary services
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHttpContextAccessor(); // Register IHttpContextAccessor
 
-
-
-// Add Swagger configuration
 builder.Services.AddSwaggerConfiguration();
-// Resolve IFeatureManager to check the feature flag
+
 
 #region Cache Provider
 
@@ -74,6 +74,7 @@ builder.Services.AddCacheWithRedis(builder.Configuration);
 
 var app = builder.Build();
 var featureManager = app.Services.GetRequiredService<IFeatureManager>();
+
 //To Present middleware dynamic caching example
 var useMemcached = await featureManager.IsEnabledAsync("MemCachedEnabled");
 var  useRedis = await featureManager.IsEnabledAsync("IdempotencyEnabled");
@@ -85,12 +86,8 @@ if (await featureManager.IsEnabledAsync("RecommendationCacheMiddleware"))
 	app.UseMiddleware<RecommendationCacheMiddleware>();
 }
 
-
-
-// Configure middleware and endpoints
 ConfigureSwaggerUI(app);
 ConfigureRequestPipeline(app);
-
 
 #region Middleware Configuration
 
@@ -121,7 +118,6 @@ void ConfigureRequestPipeline(WebApplication app)
 	app.MapControllers();
 }
 #endregion
-
 
 app.MapGreetingApiV2();
 

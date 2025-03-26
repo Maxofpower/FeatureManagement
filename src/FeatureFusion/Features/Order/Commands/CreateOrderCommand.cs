@@ -1,16 +1,20 @@
-﻿using FeatureManagementFilters.Models.Validator;
+﻿using FeatureFusion.Features.Order.Commands;
+using FeatureFusion.Infrastructure.CQRS;
+using FeatureManagementFilters.Models.Validator;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
+
 
 namespace FeatureFusion.Models
 {
-	public class OrderRequest
+	public class CreateOrderCommand : IRequest<OrderResponse>
 	{
 		public int ProductId { get; set; }
 		public int Quantity { get; set; }
 		public int CustomerId { get; set; }
 	}
-	public class OrderRequestValidator : BaseValidator<OrderRequest>
+	public class OrderRequestValidator : BaseValidator<CreateOrderCommand>
 	{
 		private readonly ILogger<OrderRequestValidator> _logger;
 
@@ -20,7 +24,7 @@ namespace FeatureFusion.Models
 			RuleFor(x => x.Quantity)
 		   .GreaterThan(0).WithMessage("Quantity must be greater than 0");
 		}
-		public async Task<ValidationResult> ValidateWithResultAsync(OrderRequest item)
+		public async Task<ValidationResult> ValidateWithResultAsync(CreateOrderCommand item)
 		{
 			var validationResult = await ValidateAsync(item);
 
@@ -47,9 +51,6 @@ namespace FeatureFusion.Models
 
 			return ValidationResult.Success();
 		}
-
-
-
 	}
 
 }

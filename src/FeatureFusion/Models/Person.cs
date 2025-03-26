@@ -17,7 +17,7 @@ namespace FeatureFusion.Models
 			RuleFor(x => x.Name).NotEmpty().WithMessage("Name is required.");
 			RuleFor(x => x.Age).InclusiveBetween(18, 99).WithMessage("Age must be between 18 and 99.");
 		}
-		
+
 	}
 
 }

@@ -1,7 +1,9 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Conventions;
+using FeatureFusion.Features.Order.Commands;
 using FeatureFusion.Infrastructure.Caching;
+using FeatureFusion.Infrastructure.CQRS;
 using FeatureFusion.Infrastructure.ValidationProvider;
 using FeatureFusion.Models;
 using FeatureManagementFilters.Infrastructure.Caching;
@@ -14,7 +16,6 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -24,9 +25,9 @@ using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Text.Json;
+using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
 
 namespace FeatureFusion.Infrastructure.Exetnsion
 {
@@ -228,7 +229,38 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 
 		}
 
+		public static IServiceCollection AddMediatorServices(this IServiceCollection services, params Assembly[] assemblies)
+		{
+			// Registering IMediator and Pipeline Behaviors
+			services.AddScoped<IMediator, Mediator>();
 
+
+			services.Scan(scan => scan
+			   .FromAssemblies(assemblies)
+			   .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
+			   .AsImplementedInterfaces()
+			   .WithScopedLifetime());
+
+			services.Scan(scan => scan
+			   .FromAssemblies(assemblies)
+			   .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>)))
+			   .AsImplementedInterfaces()
+			   .WithScopedLifetime());
+
+			services.Scan(scan => scan
+		    	.FromAssemblies(assemblies)  
+		        .AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<,>))) 
+			    .AsImplementedInterfaces() 
+			    .WithScopedLifetime());
+
+			services.Scan(scan => scan
+			.FromAssemblies(assemblies)
+			.AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<>)))
+			.AsImplementedInterfaces()
+			.WithScopedLifetime());
+
+			return services;
+		}
 		public static class HealthCheckExtensions
 		{
 			public static Task WriteResponse(HttpContext context, HealthReport report)

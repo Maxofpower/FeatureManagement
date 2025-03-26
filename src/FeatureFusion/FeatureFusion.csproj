@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Persons - Copy\**" />
+    <Compile Remove="Features\Person\**" />
+    <Content Remove="Features\Persons - Copy\**" />
+    <Content Remove="Features\Person\**" />
+    <EmbeddedResource Remove="Features\Persons - Copy\**" />
+    <EmbeddedResource Remove="Features\Person\**" />
+    <None Remove="Features\Persons - Copy\**" />
+    <None Remove="Features\Person\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
@@ -19,6 +30,7 @@
     <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="9.3.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.2" />
     <PackageReference Include="Microsoft.FeatureManagement" Version="4.0.0" />
+    <PackageReference Include="Scrutor" Version="6.0.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.8.31" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0" />
