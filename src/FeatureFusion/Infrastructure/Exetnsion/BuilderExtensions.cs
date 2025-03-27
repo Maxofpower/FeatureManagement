@@ -4,6 +4,7 @@ using Asp.Versioning.Conventions;
 using FeatureFusion.Features.Order.Commands;
 using FeatureFusion.Infrastructure.Caching;
 using FeatureFusion.Infrastructure.CQRS;
+using FeatureFusion.Infrastructure.CQRS.Adapter;
 using FeatureFusion.Infrastructure.ValidationProvider;
 using FeatureFusion.Models;
 using FeatureManagementFilters.Infrastructure.Caching;
@@ -231,33 +232,96 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 
 		public static IServiceCollection AddMediatorServices(this IServiceCollection services, params Assembly[] assemblies)
 		{
-			// Registering IMediator and Pipeline Behaviors
-			services.AddScoped<IMediator, Mediator>();
+			
+			services.Scan(scan => scan
+				.FromAssemblies(assemblies)
+				.AddClasses(classes => classes.AssignableToAny(
+					typeof(IRequestHandler<>),
+					typeof(IRequestHandler<,>)))
+				.AsImplementedInterfaces()
+				.WithTransientLifetime());
+
+			
+			services.AddTransient(
+				typeof(IRequestHandler<,>).MakeGenericType(typeof(RequestAdapter<>), typeof(Unit)),
+				provider => {
+					var requestType = typeof(RequestAdapter<>).GetGenericArguments()[0];
+					var innerHandlerType = typeof(IRequestHandler<>).MakeGenericType(requestType);
+	
+						var innerHandler = provider.GetRequiredService(innerHandlerType);
+						var adapterType = typeof(VoidCommandAdapter<>).MakeGenericType(requestType);
+						return ActivatorUtilities.CreateInstance(provider, adapterType, innerHandler);
+
+				});
+			
+			//services.AddTransient<IRequestHandler<RequestAdapter<CreateOrderCommandVoid>, Unit>>(sp =>
+			//	new VoidCommandAdapter<CreateOrderCommandVoid>(
+			//		sp.GetRequiredService<IRequestHandler<CreateOrderCommandVoid>>()));
 
 
 			services.Scan(scan => scan
-			   .FromAssemblies(assemblies)
-			   .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
-			   .AsImplementedInterfaces()
-			   .WithScopedLifetime());
+				.FromAssemblies(assemblies)
+				.AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<,>)))
+				.AsImplementedInterfaces()
+				.WithTransientLifetime());
 
-			services.Scan(scan => scan
-			   .FromAssemblies(assemblies)
-			   .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>)))
-			   .AsImplementedInterfaces()
-			   .WithScopedLifetime());
+			#region void adaptor
+			var voidCommandTypes = assemblies
+				.SelectMany(a => a.GetTypes())
+				.Where(t => typeof(IRequest).IsAssignableFrom(t) &&
+						   !typeof(IRequest<>).IsAssignableFrom(t) &&
+						   !t.IsAbstract && !t.IsInterface)
+				.ToList();
 
-			services.Scan(scan => scan
-		    	.FromAssemblies(assemblies)  
-		        .AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<,>))) 
-			    .AsImplementedInterfaces() 
-			    .WithScopedLifetime());
+			foreach (var commandType in voidCommandTypes)
+			{
+				var adapterType = typeof(VoidCommandAdapter<>).MakeGenericType(commandType);
+				var serviceType = typeof(IRequestHandler<,>).MakeGenericType(
+					typeof(RequestAdapter<>).MakeGenericType(commandType),
+					typeof(Unit));
 
-			services.Scan(scan => scan
-			.FromAssemblies(assemblies)
-			.AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<>)))
-			.AsImplementedInterfaces()
-			.WithScopedLifetime());
+				services.AddTransient(serviceType, provider =>
+				{
+					var innerHandlerType = typeof(IRequestHandler<>).MakeGenericType(commandType);
+					var innerHandler = provider.GetRequiredService(innerHandlerType);
+					return ActivatorUtilities.CreateInstance(provider, adapterType, innerHandler);
+				});
+			}
+			#endregion
+
+			services.AddSingleton<IMediator, Mediator>();
+
+		
+
+
+
+
+			//services.AddTransient(typeof(IRequestHandler<,>).MakeGenericType(typeof(RequestAdapter<>), typeof(Unit)), 
+			//typeof(VoidCommandAdapter<>));
+
+			//services.Scan(scan => scan
+			//   .FromAssemblies(assemblies)
+			//   .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
+			//   .AsImplementedInterfaces()
+			//   .WithScopedLifetime());
+
+			//services.Scan(scan => scan
+			//   .FromAssemblies(assemblies)
+			//   .AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<>)))
+			//   .AsImplementedInterfaces()
+			//   .WithScopedLifetime());
+
+			//services.Scan(scan => scan
+			//   	.FromAssemblies(assemblies)  
+			//       .AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<,>))) 
+			//    .AsImplementedInterfaces() 
+			//    .WithScopedLifetime());
+
+			//services.Scan(scan => scan
+			//.FromAssemblies(assemblies)
+			//.AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<>)))
+			//.AsImplementedInterfaces()
+			//.WithScopedLifetime());
 
 			return services;
 		}

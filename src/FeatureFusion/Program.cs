@@ -1,4 +1,5 @@
 using Asp.Versioning.ApiExplorer;
+using BenchmarkDotNet.Running;
 using Enyim.Caching;
 using Enyim.Caching.Configuration;
 using FeatureFusion.Infrastructure.Exetnsion;
@@ -12,6 +13,7 @@ using FeatureManagementFilters.Services.FeatureToggleService;
 using FeatureManagementFilters.Services.ProductService;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MediatorBenchmarks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.FeatureManagement;
@@ -177,7 +179,9 @@ if(useRedis)
 
 #endregion
 
-	app.Run();
+BenchmarkRunner.Run<MediatorBenchmark>();
+
+app.Run();
 
 public partial class Program { }
 

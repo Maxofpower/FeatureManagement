@@ -1,117 +1,61 @@
-﻿using Enyim.Caching.Memcached.Protocol.Text;
-using System;
+﻿
+
+using FeatureFusion.Infrastructure.CQRS.Wrapper;
 using System.Collections.Concurrent;
-using System.Collections.Immutable;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Reflection.Metadata;
+using FeatureFusion.Infrastructure.CQRS.Adapter;
 
 namespace FeatureFusion.Infrastructure.CQRS
 {
 	public class Mediator : IMediator
 	{
+
+		public delegate Task<TResponse> RequestHandlerDelegate<TResponse>(CancellationToken cancellationToken);
+		public delegate Task VoidRequestHandlerDelegate(CancellationToken cancellationToken);
 		private readonly IServiceProvider _serviceProvider;
-		private readonly ConcurrentDictionary<Type, object> _requestHandlers = new();
+		private static readonly ConcurrentDictionary<Type, RequestHandlerWrapper> _requestHandlers = new();
+		private static readonly ConcurrentDictionary<Type, PipelineBehaviorWrapper> _behaviorPipelines = new();
 
-		public Mediator(IServiceProvider serviceProvider)
+		public Mediator(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
+
+		public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
 		{
-			_serviceProvider = serviceProvider;
-		}
-
-		public async Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
-		{
-			var requestType = request.GetType();
-
-			var handler = _requestHandlers.GetOrAdd(requestType, type =>
-			{
-				var handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, typeof(TResponse));
-
-				var handlerInstance = _serviceProvider.GetService(handlerType);
-
-				if (handlerInstance == null)
-				{
-					throw new InvalidOperationException(
-						$"Handler for request type {requestType.Name} with response {typeof(TResponse).Name} not registered");
-				}
-
-				return handlerInstance;
-			});
-
-			var pipelineBehaviors = _serviceProvider
-				.GetServices(typeof(IPipelineBehavior<,>).MakeGenericType(requestType, typeof(TResponse)))
-				.Cast<object>()
-				.Reverse()
-				.ToList();
-
-			RequestHandlerDelegate<TResponse> next = () =>
-			{
-				var handleMethod = handler.GetType().GetMethod("Handle");
-				var result = (Task<TResponse>)handleMethod.Invoke(handler, new object[] { request, cancellationToken });
-				return result;
-			};
-
-			// Apply behaviors in reverse order
-			foreach (var behavior in pipelineBehaviors)
-			{
-				var current = next;
-				var behaviorType = behavior.GetType();
-				var handleMethod = behaviorType.GetMethod("Handle");
-
-				next = () => (Task<TResponse>)handleMethod.Invoke(
-					behavior,
-					new object[] { request, current, cancellationToken });
-			}
-
-			return await next();
-		}
-		public async Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-	where TRequest : IRequest
-		{
-			if (request == null)
-			{
-				throw new ArgumentNullException(nameof(request));
-			}
+			if (request == null) throw new ArgumentNullException(nameof(request));
 
 			var requestType = request.GetType();
+			var handler = GetRequestHandler<TResponse>(requestType);
+			var pipeline = GetBehaviorPipeline<TResponse>(requestType);
 
-			// Resolve pipeline behaviors for requests without response
-			var pipelineBehaviors = _serviceProvider
-				.GetServices<IPipelineBehavior<TRequest>>()
-				.Reverse()
-				.ToList();
-
-			// Get or create the handler delegate for this request type
-			var handler = _requestHandlers.GetOrAdd(requestType, type =>
-			{
-				var handlerType = typeof(IRequestHandler<>).MakeGenericType(requestType);
-				var handlerInstance = _serviceProvider.GetService(handlerType);
-				if (handlerInstance == null)
-				{
-					throw new InvalidOperationException(
-						$"Handler for request type {requestType.Name} not registered");
-				}
-				return handlerInstance;
-			});
-
-			var handleMethod = handler.GetType().GetMethod("Handle");
-			// Chain behaviors with the handler
-			RequestHandlerDelegate next = () =>
-			{
-				var result = (Task)handleMethod.Invoke(handler, new object[] { request, cancellationToken });
-				return result;
-			};
-
-			foreach (var behavior in pipelineBehaviors)
-			{
-				var current = next;
-				next = () => behavior.Handle(request, current, cancellationToken);
-			}
-
-			// Execute the final pipeline
-			await next();
+			return handler.Handle(request, pipeline, _serviceProvider, cancellationToken);
 		}
+
+		public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest
+		{
+			if (request == null) throw new ArgumentNullException(nameof(request));
+
+			var requestType = request.GetType();
+			var adapterType = typeof(RequestAdapter<>).MakeGenericType(requestType);
+			var adaptedRequest = (IRequest<Unit>)Activator.CreateInstance(adapterType, request)!;
+
+			return Send(adaptedRequest, cancellationToken);
+		}
+
+		private RequestHandlerWrapper<TResponse> GetRequestHandler<TResponse>(Type requestType)
+		{
+			return (RequestHandlerWrapper<TResponse>)_requestHandlers.GetOrAdd(requestType, type =>
+			{
+				var wrapperType = typeof(RequestHandlerWrapper<,>).MakeGenericType(type, typeof(TResponse));
+				return (RequestHandlerWrapper)Activator.CreateInstance(wrapperType)!;
+			});
+		}
+		private PipelineBehaviorWrapper<TResponse> GetBehaviorPipeline<TResponse>(Type requestType)
+		{
+			return (PipelineBehaviorWrapper<TResponse>)_behaviorPipelines.GetOrAdd(requestType, type =>
+			{
+				var wrapperType = typeof(PipelineBehaviorWrapper<,>).MakeGenericType(type, typeof(TResponse));
+				return (PipelineBehaviorWrapper)Activator.CreateInstance(wrapperType)!;
+			});
+		}
+
+	
 	}
 }
-
-

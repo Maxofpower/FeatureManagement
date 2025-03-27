@@ -1,5 +1,4 @@
 ﻿using FeatureFusion.Features.Order.Commands;
-using FeatureFusion.Features.Order.Types;
 using FeatureFusion.Infrastructure.CQRS;
 using FeatureManagementFilters.Models.Validator;
 using FluentValidation;
@@ -9,17 +8,17 @@ using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
 
 namespace FeatureFusion.Models
 {
-	public class CreateOrderCommand : IRequest<Result<OrderResponse>>
+	public class CreateOrderCommandVoid : IRequest
 	{
 		public int ProductId { get; set; }
 		public int Quantity { get; set; }
 		public int CustomerId { get; set; }
 	}
-	public class OrderRequestValidator : BaseValidator<CreateOrderCommand>
+	public class CreateOrderCommandVoidValidator : BaseValidator<CreateOrderCommand>
 	{
 		private readonly ILogger<OrderRequestValidator> _logger;
 
-		public OrderRequestValidator(ILogger<OrderRequestValidator> logger)
+		public CreateOrderCommandVoidValidator(ILogger<OrderRequestValidator> logger)
 		{
 			_logger = logger;
 			RuleFor(x => x.Quantity)

@@ -3,15 +3,13 @@ using FeatureManagementFilters.Models;
 using static FeatureFusion.Controllers.V2.OrderController;
 using FeatureFusion.Models;
 using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
-using FeatureFusion.Features.Order.Types;
-
+using StackExchange.Redis;
 namespace FeatureFusion.Features.Order.Commands
 {
-	public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Result<OrderResponse>>
+	public class CreateOrderCommandVoidHandler : IRequestHandler<CreateOrderCommandVoid>
 	{
-		public Task<Result<OrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+		public Task Handle(CreateOrderCommandVoid request, CancellationToken cancellationToken)
 		{
-			
 			// Static in-memory product
 			var product = new Product
 			{
@@ -34,7 +32,8 @@ namespace FeatureFusion.Features.Order.Commands
 
 			var orderTotal = product.Price * request.Quantity;
 
-			var response = new OrderResponse {
+			var response = new OrderResponse
+			{
 				OrderId = orderId,
 				CustomerName = customer.Name,
 				ProductName = product.Name,
@@ -43,11 +42,13 @@ namespace FeatureFusion.Features.Order.Commands
 				OrderDate = DateTime.UtcNow,
 				Message = "Order created successfully."
 			};
-			return Result<OrderResponse>.Success(response);
-			
+			return Task.CompletedTask;
+
 		}
-	
-	public class OrderResponse
+
+		
+
+		public class OrderResponse
 		{
 			public Ulid OrderId { get; set; }
 			public string CustomerName { get; set; }
