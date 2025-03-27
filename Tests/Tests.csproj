@@ -5,6 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+	  <BaseOutputPath>.</BaseOutputPath>
+	  <OutputPath>.\</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>

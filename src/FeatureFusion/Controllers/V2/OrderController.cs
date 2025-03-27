@@ -38,16 +38,9 @@ namespace FeatureFusion.Controllers.V2
 			{
 				return BadRequest(validationResult.ProblemDetails);
 			}
-			var voidcommand = new CreateOrderCommandVoid
-			{
-				CustomerId = 2,
-				ProductId = 2,
-				Quantity = 2,
-			};
+		
 			var createOrderResult= await _mediator.Send(request);
-			//test purpose
-			await _mediator.Send(voidcommand);
-			//
+			
 			return Ok(createOrderResult);
 		}
 

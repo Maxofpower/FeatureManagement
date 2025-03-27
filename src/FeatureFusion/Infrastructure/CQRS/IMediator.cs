@@ -6,6 +6,7 @@ namespace FeatureFusion.Infrastructure.CQRS
 	public interface IMediator
 	{
 		Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
+
 		Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
 			where TRequest : IRequest;
 	}
@@ -19,7 +20,6 @@ namespace FeatureFusion.Infrastructure.CQRS
 	{
 		Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
 	}
-	
 
 	public interface IRequestHandler<in TRequest>
 		where TRequest : IRequest
@@ -36,6 +36,4 @@ namespace FeatureFusion.Infrastructure.CQRS
 	{
 		Task Handle(TRequest request, VoidRequestHandlerDelegate next, CancellationToken cancellationToken = default);
 	}
-
-
 }

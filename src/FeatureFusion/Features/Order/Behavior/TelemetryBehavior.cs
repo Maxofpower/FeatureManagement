@@ -57,7 +57,5 @@ namespace FeatureFusion.Infrastructure.CQRS.Behaviors
 				activity.Stop();
 			}
 		}
-
-		
 	}
 }

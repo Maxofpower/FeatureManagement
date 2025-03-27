@@ -24,7 +24,6 @@ namespace FeatureFusion.Infrastructure.CQRS.Wrapper
 	 CancellationToken cancellationToken)
 		{
 
-			// Normal request handling
 			var normalhandler = serviceProvider.GetRequiredService<IRequestHandler<TRequest, TResponse>>();
 			return pipeline.Handle(
 				request,

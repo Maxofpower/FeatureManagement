@@ -14,6 +14,7 @@ namespace FeatureFusion.Infrastructure.CQRS
 		private readonly IServiceProvider _serviceProvider;
 		private static readonly ConcurrentDictionary<Type, RequestHandlerWrapper> _requestHandlers = new();
 		private static readonly ConcurrentDictionary<Type, PipelineBehaviorWrapper> _behaviorPipelines = new();
+		private static readonly ConcurrentDictionary<Type, Func<IRequest, IRequest<Unit>>> _adapterCache = new();
 
 		public Mediator(IServiceProvider serviceProvider) => _serviceProvider = serviceProvider;
 
@@ -28,34 +29,42 @@ namespace FeatureFusion.Infrastructure.CQRS
 			return handler.Handle(request, pipeline, _serviceProvider, cancellationToken);
 		}
 
-		public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default) where TRequest : IRequest
+
+		public Task Send<TRequest>(TRequest request, CancellationToken ct = default) where TRequest : IRequest
 		{
 			if (request == null) throw new ArgumentNullException(nameof(request));
+			var adapterFactory = _adapterCache.GetOrAdd(request.GetType(), type =>
+			{
+				var adapterType = typeof(RequestAdapter<>).MakeGenericType(type);
+				return cmd => (IRequest<Unit>)Activator.CreateInstance(adapterType, cmd)!;
+			});
 
-			var requestType = request.GetType();
-			var adapterType = typeof(RequestAdapter<>).MakeGenericType(requestType);
-			var adaptedRequest = (IRequest<Unit>)Activator.CreateInstance(adapterType, request)!;
-
-			return Send(adaptedRequest, cancellationToken);
+			return Send(adapterFactory(request), ct);
+		
 		}
 
 		private RequestHandlerWrapper<TResponse> GetRequestHandler<TResponse>(Type requestType)
 		{
-			return (RequestHandlerWrapper<TResponse>)_requestHandlers.GetOrAdd(requestType, type =>
-			{
-				var wrapperType = typeof(RequestHandlerWrapper<,>).MakeGenericType(type, typeof(TResponse));
-				return (RequestHandlerWrapper)Activator.CreateInstance(wrapperType)!;
-			});
-		}
-		private PipelineBehaviorWrapper<TResponse> GetBehaviorPipeline<TResponse>(Type requestType)
-		{
-			return (PipelineBehaviorWrapper<TResponse>)_behaviorPipelines.GetOrAdd(requestType, type =>
-			{
-				var wrapperType = typeof(PipelineBehaviorWrapper<,>).MakeGenericType(type, typeof(TResponse));
-				return (PipelineBehaviorWrapper)Activator.CreateInstance(wrapperType)!;
-			});
+			if (_requestHandlers.TryGetValue(requestType, out var cachedHandler))
+				return (RequestHandlerWrapper<TResponse>)cachedHandler;
+
+			var wrapperType = typeof(RequestHandlerWrapper<,>).MakeGenericType(requestType, typeof(TResponse));
+			var newWrapper = (RequestHandlerWrapper)Activator.CreateInstance(wrapperType)!;
+
+			return (RequestHandlerWrapper<TResponse>)_requestHandlers.GetOrAdd(requestType, newWrapper);
 		}
 
-	
+		private PipelineBehaviorWrapper<TResponse> GetBehaviorPipeline<TResponse>(Type requestType)
+		{
+			if (_behaviorPipelines.TryGetValue(requestType, out var cachedPipeline))
+				return (PipelineBehaviorWrapper<TResponse>)cachedPipeline;
+
+			var wrapperType = typeof(PipelineBehaviorWrapper<,>).MakeGenericType(requestType, typeof(TResponse));
+			var newWrapper = (PipelineBehaviorWrapper)Activator.CreateInstance(wrapperType)!;
+
+			return (PipelineBehaviorWrapper<TResponse>)_behaviorPipelines.GetOrAdd(requestType, newWrapper);
+		}
+
+
 	}
 }

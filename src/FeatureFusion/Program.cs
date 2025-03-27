@@ -13,7 +13,6 @@ using FeatureManagementFilters.Services.FeatureToggleService;
 using FeatureManagementFilters.Services.ProductService;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using MediatorBenchmarks;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
 using Microsoft.FeatureManagement;
@@ -179,7 +178,6 @@ if(useRedis)
 
 #endregion
 
-BenchmarkRunner.Run<MediatorBenchmark>();
 
 app.Run();
 

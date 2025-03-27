@@ -189,11 +189,12 @@ namespace Tests.FeatureFusion.CQRS
 		private class TestLogger<T> : ILogger<T>
 		{
 			public List<(LogLevel Level, string Message)> LogEntries { get; } = new();
-			public IDisposable BeginScope<TState>(TState state) => new NullScope();
+			IDisposable ILogger.BeginScope<TState>(TState state) => new NullScope();
 			public bool IsEnabled(LogLevel logLevel) => true;
 
 			public void Log<TState>(LogLevel logLevel, EventId eventId, TState state,
-				Exception exception, Func<TState, Exception, string> formatter)
+		Exception? exception, // Add nullability marker (?)
+		Func<TState, Exception?, string> formatter) // Match interface's nullable formatter
 			{
 				LogEntries.Add((logLevel, formatter(state, exception)));
 			}
