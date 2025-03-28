@@ -7,7 +7,8 @@ This repository is a **central hub** for all the advanced .NET and ASP.NET Core 
 
 ### 🔹 What's Inside?  
 - ✅ **Feature Management & Feature Flags**
-- ✅ **IdempotentFusion (Idempotent Api with optional lock)**  
+- ✅ **IdempotentFusion (Idempotent Api with optional lock)**
+- ✅ **Manual Mediator with Pipeline Behavior**  
 - ✅ **Api Versioning Strategies**  
 - ✅ **Generic and Reusable Api Validations**  
 - ✅ **Middleware Dynamic Caching**
@@ -92,6 +93,9 @@ Authorization: Bearer <your_jwt_token_here>
 
 This section contains **various design patterns** implemented in .NET, showcasing real-world use cases and best practices. Some of the patterns you'll find include:
 
+- **Mediator Pattern**
+- **Adapter Pattern**
+- **Decorator Pattern** 
 - **Singleton Pattern**  
 - **Factory Pattern**  
 - **Repository Pattern**  
