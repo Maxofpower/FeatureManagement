@@ -18,7 +18,7 @@
 x64/
 [Bb]in/
 [Oo]bj/
-
+net9.0/
 # Build scripts folder
 [Aa]pp[Bb]uild/
 [Oo]ut/
@@ -168,3 +168,4 @@ $RECYCLE.BIN/
 glob:*.user
 *.patch
 *.hg
+

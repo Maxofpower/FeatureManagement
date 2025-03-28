@@ -1,7 +1,10 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Conventions;
+using FeatureFusion.Features.Order.Commands;
 using FeatureFusion.Infrastructure.Caching;
+using FeatureFusion.Infrastructure.CQRS;
+using FeatureFusion.Infrastructure.CQRS.Adapter;
 using FeatureFusion.Infrastructure.ValidationProvider;
 using FeatureFusion.Models;
 using FeatureManagementFilters.Infrastructure.Caching;
@@ -14,7 +17,6 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -24,9 +26,9 @@ using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
-using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Text.Json;
+using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
 
 namespace FeatureFusion.Infrastructure.Exetnsion
 {
@@ -228,7 +230,61 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 
 		}
 
+		public static IServiceCollection AddMediatorServices(this IServiceCollection services, params Assembly[] assemblies)
+		{
 
+			services.Scan(scan => scan
+				.FromAssemblies(assemblies)
+				.AddClasses(classes => classes.AssignableToAny(
+					typeof(IRequestHandler<>),
+					typeof(IRequestHandler<,>)))
+				.AsImplementedInterfaces()
+				.WithTransientLifetime());
+
+
+			services.Scan(scan => scan
+				.FromAssemblies(assemblies)
+				.AddClasses(classes => classes.AssignableTo(typeof(IPipelineBehavior<,>)))
+				.AsImplementedInterfaces()
+				.WithTransientLifetime());
+
+			#region void adaptor
+			var voidCommandTypes = assemblies
+				.SelectMany(a => a.GetTypes())
+				.Where(t => typeof(IRequest).IsAssignableFrom(t) &&
+						   !typeof(IRequest<>).IsAssignableFrom(t) &&
+						   !t.IsAbstract && !t.IsInterface)
+				.ToList();
+
+			foreach (var commandType in voidCommandTypes)
+			{
+				var adapterType = typeof(VoidCommandAdapter<>).MakeGenericType(commandType);
+				var serviceType = typeof(IRequestHandler<,>).MakeGenericType(
+					typeof(RequestAdapter<>).MakeGenericType(commandType),
+					typeof(Unit));
+
+				services.AddTransient(serviceType, provider =>
+				{
+					var innerHandlerType = typeof(IRequestHandler<>).MakeGenericType(commandType);
+					var innerHandler = provider.GetRequiredService(innerHandlerType);
+					return ActivatorUtilities.CreateInstance(provider, adapterType, innerHandler);
+				});
+			}
+			#endregion
+
+			services.AddTransient( typeof(IRequestHandler<,>).MakeGenericType(typeof(RequestAdapter<>), typeof(Unit)),
+				provider =>
+				{
+					var requestType = typeof(RequestAdapter<>).GetGenericArguments()[0];
+					var innerHandlerType = typeof(IRequestHandler<>).MakeGenericType(requestType);
+					var innerHandler = provider.GetRequiredService(innerHandlerType);
+					var adapterType = typeof(VoidCommandAdapter<>).MakeGenericType(requestType);
+					return ActivatorUtilities.CreateInstance(provider, adapterType, innerHandler);
+				});
+			services.AddSingleton<IMediator, Mediator>();
+
+			return services;
+		}
 		public static class HealthCheckExtensions
 		{
 			public static Task WriteResponse(HttpContext context, HealthReport report)

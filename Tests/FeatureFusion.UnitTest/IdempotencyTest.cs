@@ -1,6 +1,7 @@
 ﻿using Castle.Core.Logging;
 using FeatureFusion.Controllers.V2;
 using FeatureFusion.Infrastructure.Caching;
+using FeatureFusion.Infrastructure.CQRS;
 using FeatureFusion.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -82,7 +83,8 @@ namespace Tests.FeatureFusion.IdempotentAttributeFilterTests
 		{
 			var mockLogger = new Mock<ILogger<OrderRequestValidator>>();
 			var validator = new OrderRequestValidator(mockLogger.Object);
-			return new OrderController(validator);
+			var mockMediator = new Mock<IMediator>();
+			return new OrderController(validator, mockMediator.Object);
 		}
 
 		// Helper method to create a successful ActionExecutedContext
@@ -227,7 +229,9 @@ namespace Tests.FeatureFusion.IdempotentAttributeFilterTests
 			// Simulate a failed action execution
 			async Task<ActionExecutedContext> Next()
 			{
+				await Task.Yield();
 				throw new Exception("Test exception");
+				
 			}
 
 			// Act
@@ -261,9 +265,11 @@ namespace Tests.FeatureFusion.IdempotentAttributeFilterTests
 		{
 			// Arrange
 			var idempotencyKey = Ulid.NewUlid().ToString();
-			var httpContext = new DefaultHttpContext();
-			httpContext.Request.Headers["Idempotency-Key"] = idempotencyKey;
-			httpContext.User = new ClaimsPrincipal(new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, "456") }));
+			var httpContext = CreateHttpContext(idempotencyKey);
+			var filter = CreateFilter(useLock: true);
+			var context = CreateActionContext(httpContext, CreateMockOrderController());
+			var executedContext = CreateSuccessfulActionExecutedContext(context);
+
 
 			var lockKey = $"Idempotency_456_{idempotencyKey}_lock";
 			var lockValue = Guid.NewGuid().ToString();
@@ -276,24 +282,6 @@ namespace Tests.FeatureFusion.IdempotentAttributeFilterTests
 			_redisConnectionWrapperMock?
 				.Setup(r => r.ReleaseLockAsync(lockKey, It.IsAny<string>()))
 				.Returns(Task.FromResult(true));
-
-			var filter = new IdempotentAttributeFilter(_distributedCache, new NullLoggerFactory(), _redisConnectionWrapperMock?.Object, true);
-
-			var mockLogger = new Mock<ILogger<OrderRequestValidator>>();
-			var validator = new OrderRequestValidator(mockLogger.Object);
-			var mockController = new Mock<OrderController>(validator);
-
-			var context = new ActionExecutingContext(
-				new ActionContext(httpContext, new RouteData(), new ActionDescriptor()),
-				new List<IFilterMetadata>(),
-				new Dictionary<string, object?>(),
-				mockController.Object);
-
-			// Simulate a successful action execution
-			var executedContext = new ActionExecutedContext(context, new List<IFilterMetadata>(), new Exception("No exception occurred"))
-			{
-				Result = new ObjectResult(new { message = "Success" }) { StatusCode = 200 }
-			};
 
 			// Act
 			await filter.OnActionExecutionAsync(context, () => Task.FromResult(executedContext));
