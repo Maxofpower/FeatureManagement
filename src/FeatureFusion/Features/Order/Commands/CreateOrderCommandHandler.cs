@@ -4,25 +4,37 @@ using static FeatureFusion.Controllers.V2.OrderController;
 using FeatureFusion.Models;
 using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
 using FeatureFusion.Features.Order.Types;
+using FeatureFusion.Features.Order.IntegrationEvents;
+using FeatureFusion.Features.Order.IntegrationEvents.Events;
+using FeatureFusion.Infrastructure.Context;
 
 namespace FeatureFusion.Features.Order.Commands
 {
 	public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Result<OrderResponse>>
 	{
-		public Task<Result<OrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+		private readonly IServiceProvider _serviceProvider;
+		private readonly CatalogDbContext _catalogDbContext;
+
+		public CreateOrderCommandHandler(IServiceProvider serviceProvider,
+			CatalogDbContext catalogdbContext)
+		{
+			_serviceProvider = serviceProvider;
+			_catalogDbContext = catalogdbContext;
+		}
+
+		public async Task<Result<OrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
 		{
 			
 			// Static in-memory product
 			var product = new Product
 			{
-				Id = 12345,
 				Name = "Smartphone",
 				Published = true,
 				Deleted = false,
 				VisibleIndividually = true,
 				Price = 599.99m
 			};
-
+			
 			// Static in-memory customer
 			var customer = new Person
 			{
@@ -30,7 +42,7 @@ namespace FeatureFusion.Features.Order.Commands
 				Age = 11111,
 			};
 
-			var orderId = Ulid.NewUlid();
+			var orderId = Guid.NewGuid();
 
 			var orderTotal = product.Price * request.Quantity;
 
@@ -43,13 +55,22 @@ namespace FeatureFusion.Features.Order.Commands
 				OrderDate = DateTime.UtcNow,
 				Message = "Order created successfully."
 			};
+			var evt = new OrderCreatedIntegrationEvent( orderId, orderTotal);
+
+			using var scope = _serviceProvider.CreateScope();
+			var integrationService = scope.ServiceProvider.GetRequiredService<IIntegrationEventService>();
+
+			// currently it will be added to catalog , i need to setup table order
+			_catalogDbContext.Product.Add(product);
+			await integrationService.PublishThroughEventBusAsync(evt);
+
 			return Result<OrderResponse>.Success(response);
-			
+		
 		}
 	
 	public class OrderResponse
 		{
-			public Ulid OrderId { get; set; }
+			public Guid OrderId { get; set; }
 			public string CustomerName { get; set; }
 			public string ProductName { get; set; }
 			public int Quantity { get; set; }

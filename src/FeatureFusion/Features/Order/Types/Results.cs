@@ -12,12 +12,10 @@
 			IsSuccess = isSuccess;
 			ErrorMessage = errorMessage;
 		}
-
-		public static Task<Result<T>> Success(T data)
+		public static Result<T> Success(T data)
 		{
-			return Task.FromResult(new Result<T>(data, true));
+			return new Result<T>(data, true);
 		}
-
 		public static Task<Result<T>> Failure(string errorMessage)
 		{
 			return Task.FromResult(new Result<T>(default, false, errorMessage));

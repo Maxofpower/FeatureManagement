@@ -1,10 +1,10 @@
-﻿namespace FeatureManagementFilters.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace FeatureManagementFilters.Models
 {
 	public abstract partial record BaseEntity
 	{
-		/// <summary>
-		/// Gets or sets the entity identifier
-		/// </summary>
+		[Key]
 		public int Id { get; set; }
 	}
 }

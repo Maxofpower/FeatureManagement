@@ -1,15 +1,16 @@
 ﻿namespace FeatureManagementFilters.Infrastructure
 {
-	using FeatureManagementFilters.Infrastructure.Caching;
-	using FeatureManagementFilters.Models;
+	using global::FeatureManagementFilters.Infrastructure.Caching;
+	using global::FeatureManagementFilters.Models;
 	using System.Collections.Generic;
 	using System.Globalization;
 	using System.Linq;
 	using System.Security.Cryptography;
 	using System.Text;
 
-
-	namespace Nop.Core.Caching
+	// from nopcommerce caching logic
+	// https://github.com/nopSolutions/nopCommerce
+	namespace FeatureManagementFilters.Infrastructure.Caching
 	{
 		/// <summary>
 		/// Represents the default cache key service implementation

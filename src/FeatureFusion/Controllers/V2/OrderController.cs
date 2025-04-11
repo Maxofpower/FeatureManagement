@@ -23,7 +23,7 @@ namespace FeatureFusion.Controllers.V2
 			_mediator = mediator;
 		}
 
-		// to test idempotent-filter
+		// to test idempotent-filter , validation , mediator , rabbitmq
 		[HttpPost("order")]
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderResponse))] // Ok<OrderResponse>
 		[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))] // BadRequest<ValidationProblemDetails>

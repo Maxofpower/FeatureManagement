@@ -2,25 +2,24 @@ using Asp.Versioning.ApiExplorer;
 using BenchmarkDotNet.Running;
 using Enyim.Caching;
 using Enyim.Caching.Configuration;
+using EventBusRabbitMQ;
+using FeatureFusion.Features.Order.IntegrationEvents.EventHandling;
+using FeatureFusion.Features.Order.IntegrationEvents.Events;
 using FeatureFusion.Infrastructure.Exetnsion;
-using FeatureFusion.Infrastructure.ValidationProvider;
-using FeatureFusion.Models;
+
 using FeatureManagementFilters.API.V2;
-using FeatureManagementFilters.Infrastructure.Caching;
-using FeatureManagementFilters.Infrastructure.Initializers;
-using FeatureManagementFilters.Services.Authentication;
-using FeatureManagementFilters.Services.FeatureToggleService;
-using FeatureManagementFilters.Services.ProductService;
-using FluentValidation;
-using FluentValidation.AspNetCore;
+
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using static RedisSettings;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 // Use the generic method for JWT Authentication
 builder.Services.AddJwtAuthentication(builder.Configuration);
@@ -34,9 +33,6 @@ builder.Services.RegisterServices();
 builder.Services.AddMediatorServices(Assembly.GetExecutingAssembly());
 
 
-// Register all validators in the current assembly
-//builder.Services.AddAllValidators();
-
 builder.Services.AddApiVersioningWithReader();
 
 builder.Services.AddControllers();
@@ -45,6 +41,13 @@ builder.Services.AddHttpContextAccessor(); // Register IHttpContextAccessor
 
 builder.Services.AddSwaggerConfiguration();
 
+
+builder.Services.AddOptions<EventBusOptions>()
+	.Bind(builder.Configuration.GetSection("EventBus"))
+	.ValidateDataAnnotations() 
+	.ValidateOnStart();
+
+builder.AddApplicationServices(); 
 
 #region Cache Provider
 
@@ -59,7 +62,7 @@ builder.Services
 
 builder.Services.AddEnyimMemcached();
 
-// Bind and validate Redis configuration
+
 var redisSection = builder.Configuration.GetSection("Redis");
 builder.Services
 	.AddOptions<RedisOptions>()
@@ -74,6 +77,8 @@ builder.Services.AddCacheWithRedis(builder.Configuration);
 #endregion
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 var featureManager = app.Services.GetRequiredService<IFeatureManager>();
 
 //To Present middleware dynamic caching example
@@ -181,5 +186,5 @@ if(useRedis)
 
 app.Run();
 
-public partial class Program { }
+
 
