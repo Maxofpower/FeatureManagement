@@ -68,15 +68,15 @@ namespace FeatureManagementFilters.Services.ProductService
 				
 					// Static data representing products and their manufacturer promotions
 					var products = 
-					new List<Product>{new Product { Id = 1, Name = "Laptop", Published = true, Deleted = false, VisibleIndividually = true },
-					new Product { Id = 2, Name = "Phone", Published = true, Deleted = false, VisibleIndividually = true },
-						new Product { Id = 3, Name = "Headphones", Published = false, Deleted = false, VisibleIndividually = true }
+					new List<Product>{new Product { Id=1, Name = "Laptop", Published = true, Deleted = false, VisibleIndividually = true },
+					new Product { Id=2,Name = "Phone", Published = true, Deleted = false, VisibleIndividually = true },
+						new Product { Id=3, Name = "Headphones", Published = false, Deleted = false, VisibleIndividually = true }
 					};
 
 					var productManufacturers = new List<ProductManufacturer>
 					{
 						new ProductManufacturer { ProductId = 1, ManufacturerId = 10, IsFeaturedProduct = true },
-						new ProductManufacturer { ProductId = 2, ManufacturerId = 20, IsFeaturedProduct = true },
+						new ProductManufacturer { ProductId = 2 ,ManufacturerId = 20, IsFeaturedProduct = true },
 						new ProductManufacturer { ProductId = 3, ManufacturerId = 10, IsFeaturedProduct = false }
 					};
 
@@ -107,9 +107,9 @@ namespace FeatureManagementFilters.Services.ProductService
 			// Static data representing products and their manufacturer promotions
 			var products = new List<Product>
 					{
-					new Product { Id = 1, Name = "Laptop", Published = true, Deleted = false, VisibleIndividually = true },
-					new Product { Id = 2, Name = "Phone", Published = true, Deleted = false, VisibleIndividually = true },
-					new Product { Id = 3, Name = "Headphones", Published = false, Deleted = false, VisibleIndividually = true }
+					new Product {  Name = "Laptop", Published = true, Deleted = false, VisibleIndividually = true },
+					new Product {  Name = "Phone", Published = true, Deleted = false, VisibleIndividually = true },
+					new Product {  Name = "Headphones", Published = false, Deleted = false, VisibleIndividually = true }
 					};
 
 			var productManufacturers = new List<ProductManufacturer>

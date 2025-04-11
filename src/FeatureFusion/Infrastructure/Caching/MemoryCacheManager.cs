@@ -1,4 +1,5 @@
-﻿using FeatureManagementFilters.Infrastructure.Nop.Core.Caching;
+﻿
+using FeatureManagementFilters.Infrastructure.FeatureManagementFilters.Infrastructure.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using System.Collections.Concurrent;

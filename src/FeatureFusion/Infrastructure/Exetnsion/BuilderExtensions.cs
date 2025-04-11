@@ -2,7 +2,11 @@
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Conventions;
 using FeatureFusion.Features.Order.Commands;
+using FeatureFusion.Features.Order.IntegrationEvents;
+using FeatureFusion.Features.Order.IntegrationEvents.EventHandling;
+using FeatureFusion.Features.Order.IntegrationEvents.Events;
 using FeatureFusion.Infrastructure.Caching;
+using FeatureFusion.Infrastructure.Context;
 using FeatureFusion.Infrastructure.CQRS;
 using FeatureFusion.Infrastructure.CQRS.Adapter;
 using FeatureFusion.Infrastructure.ValidationProvider;
@@ -17,6 +21,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
@@ -24,11 +29,11 @@ using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
-using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
+using static Microsoft.IO.RecyclableMemoryStreamManager;
 
 namespace FeatureFusion.Infrastructure.Exetnsion
 {
@@ -121,27 +126,27 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 				throw new ArgumentNullException(nameof(configuration), "Configuration cannot be null.");
 			}
 
-			
+
 			var redisConfiguration = configuration["Redis:ConnectionString"];
 			if (string.IsNullOrEmpty(redisConfiguration))
 			{
 				throw new ArgumentNullException(nameof(redisConfiguration), "Redis connection string is missing in the configuration.");
 			}
 
-		
+
 			var redisInstanceName = configuration["Redis:InstanceName"] ?? "MyApp:";
 
-		
+
 			services.AddSingleton<IConnectionMultiplexer>(sp =>
 			{
 				var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConfiguration);
 				config.AbortOnConnectFail = false; // Continue even if Redis is unavailable
 				config.ConnectTimeout = 5000;
-				config.SyncTimeout = 5000; 
+				config.SyncTimeout = 5000;
 				return ConnectionMultiplexer.Connect(config);
 			});
 
-		
+
 			services.AddStackExchangeRedisCache(options =>
 			{
 				options.ConnectionMultiplexerFactory = () =>
@@ -188,7 +193,7 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 			services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
 
 			services.AddSingleton<IDistributedCacheManager, MemcachedCacheManager>();
-		
+
 			//TODO: for manual DistributeCache implementation
 			//services.AddKeyedSingleton<IDistributedCacheManager, RedisCacheManager>("redis");
 
@@ -199,6 +204,8 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 			services.AddScoped<IAppInitializer, ProductPromotionInitializer>();
 
 			services.AddScoped<IFeatureToggleService, FeatureToggleService>();
+
+			services.AddScoped<IIntegrationEventService, IntegrationEventService>();
 
 			var validators = GetValidators();
 
@@ -221,6 +228,7 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 			}
 
 			// services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
 
 			services.AddSingleton<IRedisConnectionWrapper, RedisConnectionWrapper>();
 
@@ -272,7 +280,7 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 			}
 			#endregion
 
-			services.AddTransient( typeof(IRequestHandler<,>).MakeGenericType(typeof(RequestAdapter<>), typeof(Unit)),
+			services.AddTransient(typeof(IRequestHandler<,>).MakeGenericType(typeof(RequestAdapter<>), typeof(Unit)),
 				provider =>
 				{
 					var requestType = typeof(RequestAdapter<>).GetGenericArguments()[0];
@@ -281,7 +289,7 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 					var adapterType = typeof(VoidCommandAdapter<>).MakeGenericType(requestType);
 					return ActivatorUtilities.CreateInstance(provider, adapterType, innerHandler);
 				});
-			services.AddSingleton<IMediator, Mediator>();
+			services.AddScoped<IMediator, Mediator>();
 
 			return services;
 		}
@@ -334,7 +342,7 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 		}
 		private static IEnumerable<Type> GetValidators()
 		{
-			Assembly[] assemblies =  new[] { Assembly.GetExecutingAssembly() } ;
+			Assembly[] assemblies = new[] { Assembly.GetExecutingAssembly() };
 
 			var validators = assemblies.SelectMany(ass => ass.GetTypes())
 					.Where(typeof(IValidator).IsAssignableFrom)
@@ -343,7 +351,30 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 			return validators;
 		}
 
-		
+		public static void AddApplicationServices(this IHostApplicationBuilder builder)
+		{
+
+			builder.AddNpgsqlDbContext<CatalogDbContext>("catalogdb", configureDbContextOptions: dbContextOptionsBuilder =>
+			{
+				dbContextOptionsBuilder.UseNpgsql(
+				npgsqlOptions =>
+				{
+					npgsqlOptions.EnableRetryOnFailure(
+						maxRetryCount: 5,
+						maxRetryDelay: TimeSpan.FromSeconds(5),
+						errorCodesToAdd: null); ;
+				});
+			});
+			var cnnectionString = builder.Configuration.GetConnectionString("catalogdb");
+			builder.AddRabbitMqEventBus("eventbus")
+						  .AddSubscription<OrderCreatedIntegrationEvent, OrderCreatedIntegrationEventHandler>()
+						  .AddEventDbContext<CatalogDbContext>(connectionString: cnnectionString);
+
+			
+			builder.Services.AddMigration<CatalogDbContext, CatalogDContextSeed>();
+		}
 	}
+
+
 }
 
