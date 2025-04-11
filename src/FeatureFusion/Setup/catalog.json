@@ -1,0 +1,266 @@
+[
+  {
+    "Id": 1,
+    "Name": "Wanderer Black Hiking Boots",
+    "Price": 109.99,
+    "Description": "Daybird's Wanderer Hiking Boots in sleek black are perfect for all your outdoor adventures. These boots are made with a waterproof leather upper and a durable rubber sole for superior traction. With their cushioned insole and padded collar, these boots will keep you comfortable all day long.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 2,
+    "Name": "Summit Pro Harness",
+    "Price": 89.99,
+    "Description": "Conquer new heights with the Summit Pro Harness by Gravitator. This lightweight and durable climbing harness features adjustable leg loops and waist belt for a customized fit. With its vibrant blue color, you'll look stylish while maneuvering difficult routes. Safety is a top priority with a reinforced tie-in point and strong webbing loops.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 3,
+    "Name": "Alpine Fusion Goggles",
+    "Price": 79.99,
+    "Description": "Enhance your skiing experience with the Alpine Fusion Goggles from WildRunner. These goggles offer full UV protection and anti-fog lenses to keep your vision clear on the slopes. With their stylish silver frame and orange lenses, you'll stand out from the crowd. Adjustable straps ensure a secure fit, while the soft foam padding provides comfort all day long.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 4,
+    "Name": "Expedition Backpack",
+    "Price": 129.99,
+    "Description": "The Expedition Backpack by Quester is a must-have for every outdoor enthusiast. With its spacious interior and multiple pockets, you can easily carry all your gear and essentials. Made with durable nylon fabric, this backpack is built to withstand the toughest conditions. The orange accents add a touch of style to this functional backpack.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 5,
+    "Name": "Blizzard Rider Snowboard",
+    "Price": 299.99,
+    "Description": "Get ready to ride the slopes with the Blizzard Rider Snowboard by B&R. This versatile snowboard is perfect for riders of all levels with its medium flex and twin shape. Its black and blue color scheme gives it a sleek and cool look. Whether you're carving turns or hitting the terrain park, this snowboard will help you shred with confidence.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 6,
+    "Name": "Carbon Fiber Trekking Poles",
+    "Price": 69.99,
+    "Description": "The Carbon Fiber Trekking Poles by Raptor Elite are the ultimate companion for your hiking adventures. Designed with lightweight carbon fiber shafts, these poles provide excellent support and durability. The comfortable and adjustable cork grips ensure a secure hold, while the blue accents add a stylish touch. Compact and collapsible, these trekking poles are easy to transport and store.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 7,
+    "Name": "Explorer 45L Backpack",
+    "Price": 149.99,
+    "Description": "The Explorer 45L Backpack by Solstix is perfect for your next outdoor expedition. Made with waterproof and tear-resistant materials, this backpack can withstand even the harshest weather conditions. With its spacious main compartment and multiple pockets, you can easily organize your gear. The green and black color scheme adds a rugged and adventurous edge.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 8,
+    "Name": "Frostbite Insulated Jacket",
+    "Price": 179.99,
+    "Description": "Stay warm and stylish with the Frostbite Insulated Jacket by Grolltex. Featuring a water-resistant outer shell and lightweight insulation, this jacket is perfect for cold weather adventures. The black and gray color combination and Grolltex logo add a touch of sophistication. With its adjustable hood and multiple pockets, this jacket offers both style and functionality.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 9,
+    "Name": "VenturePro GPS Watch",
+    "Price": 199.99,
+    "Description": "Navigate with confidence using the VenturePro GPS Watch by AirStrider. This rugged and durable watch features a built-in GPS, altimeter, and compass, allowing you to track your progress and find your way in any terrain. With its sleek black design and easy-to-read display, this watch is both stylish and practical. The VenturePro GPS Watch is a must-have for every adventurer.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 10,
+    "Name": "Trailblazer Bike Helmet",
+    "Price": 59.99,
+    "Description": "Stay safe on your cycling adventures with the Trailblazer Bike Helmet by Green Equipment. This lightweight and durable helmet features an adjustable fit system and ventilation for added comfort. With its vibrant green color and sleek design, you'll stand out on the road. The Trailblazer Bike Helmet is perfect for all types of cycling, from mountain biking to road cycling.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 11,
+    "Name": "Vertical Journey Climbing Shoes",
+    "Price": 129.99,
+    "Description": "The Vertical Journey Climbing Shoes from WildRunner in sleek black are the perfect companion for any climbing enthusiast. With an aggressive down-turned toe, sticky rubber outsole, and reinforced heel cup for added support, these shoes offer ultimate performance on even the most challenging routes.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 12,
+    "Name": "Powder Pro Snowboard",
+    "Price": 399.00,
+    "Description": "The Powder Pro Snowboard by Zephyr is designed for the ultimate ride through deep snow. Its floating camber allows for effortless turns and smooth maneuverability, while the lightweight carbon fiber construction ensures maximum control at high speeds. This board, available in vibrant turquoise, is a must-have for any backcountry shredder.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 13,
+    "Name": "Trailblaze hiking backpack",
+    "Price": 89.99,
+    "Description": "The Daybird Trailblaze backpack in forest green is a reliable and spacious bag for all your outdoor adventures. With a 40-liter capacity and durable ripstop fabric, this backpack provides ample storage and protection for your gear. Its ergonomic design and adjustable straps ensure a comfortable fit no matter the length of the hike.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 14,
+    "Name": "Stellar Duffle Bag",
+    "Price": 59.99,
+    "Description": "The Stellar Duffle Bag from Gravitator is perfect for weekend getaways or short trips. Made from waterproof nylon and available in sleek black, it features multiple internal pockets and a separate shoe compartment to keep your belongings organized. With its adjustable shoulder strap and reinforced handles, this bag is as functional as it is stylish.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 15,
+    "Name": "Summit Pro Insulated Jacket",
+    "Price": 249.99,
+    "Description": "The Summit Pro Insulated Jacket by Raptor Elite is designed to keep you warm and dry in extreme conditions. With its waterproof and breathable construction, heat-sealed seams, and insulation made from recycled materials, this jacket is both eco-friendly and high-performance. Available in vibrant red, it also features a removable hood and plenty of storage pockets.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 16,
+    "Name": "Expedition 2022 Goggles",
+    "Price": 89.00,
+    "Description": "Solstix Expedition 2022 Goggles provide clear vision and optimal protection on the slopes. With an anti-fog lens, UV protection, and a comfortable foam lining, these goggles ensure a great fit and unrestricted vision even in challenging conditions. The matte black frame gives them a sleek and modern look.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 17,
+    "Name": "Apex Climbing Harness",
+    "Price": 89.99,
+    "Description": "The Apex Climbing Harness by Legend is a lightweight and durable harness designed for maximum comfort and safety. With adjustable leg loops, a contoured waistbelt, and a secure buckle system, this harness provides a secure fit for all-day climbing sessions. Available in bold orange, it also features gear loops for easy access to your equipment.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 18,
+    "Name": "Alpine Tech Crampons",
+    "Price": 149.00,
+    "Description": "The Alpine Tech Crampons by Grolltex are essential for icy and challenging mountain terrains. Made from strong and lightweight stainless steel, these crampons provide excellent traction and stability. Their simple adjustment system allows for easy fitting and quick attachment to most hiking boots. Available in silver, they are suitable for both beginners and experienced mountaineers.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 19,
+    "Name": "EcoTrail Running Shoes",
+    "Price": 119.99,
+    "Description": "Experience the great outdoors while reducing your carbon footprint with the Green Equipment EcoTrail Running Shoes. Made from recycled materials, these shoes offer a lightweight, breathable, and flexible design in an earthy green color. With their durable Vibram outsole and cushioned midsole, they provide optimal comfort and grip on any trail.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 20,
+    "Name": "Explorer Biking Computer",
+    "Price": 199.99,
+    "Description": "The Explorer Biking Computer by B&R is the ultimate accessory for cyclists seeking data and navigation assistance. With its intuitive touchscreen display and GPS capabilities, it allows you to track your route, monitor performance metrics, and receive turn-by-turn directions. Its sleek black design and waterproof construction make it a reliable companion on all your cycling adventures.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 21,
+    "Name": "Trailblazer Black Hiking Shoes",
+    "Price": 129.99,
+    "Description": "The Legend Trailblazer is a versatile hiking shoe designed to provide unparalleled durability and comfort on any adventure. With its black color, these shoes offer a sleek and minimalist style. The shoes feature a waterproof GORE-TEX lining, Vibram rubber outsole for enhanced traction, and a reinforced toe cap for added protection. Conquer any trail with confidence in the Legend Trailblazer Black Hiking Shoes.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 22,
+    "Name": "Venture 2022 Snowboard",
+    "Price": 499.00,
+    "Description": "The Raptor Elite Venture 2022 Snowboard is a true all-mountain performer, perfect for riders of all levels. Its sleek design, combined with the vibrant blue color, makes it stand out on the slopes. The snowboard features a responsive camber profile, carbon fiber laminates for enhanced stability, and a sintered base for maximum speed. Take your snowboarding skills to new heights with the Raptor Elite Venture 2022 Snowboard.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 23,
+    "Name": "Summit Pro Climbing Harness",
+    "Price": 189.99,
+    "Description": "The Zephyr Summit Pro Climbing Harness is designed for professional climbers who demand the utmost in reliability and performance. Available in a striking orange color, this harness features 30kN rated webbing, speed-adjust buckles, and multiple gear loops for easy organization. With its lightweight design, the Summit Pro Harness offers unmatched comfort and freedom of movement. Reach new heights of confidence with the Zephyr Summit Pro Climbing Harness.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 24,
+    "Name": "Ridgevent Stealth Hiking Backpack",
+    "Price": 69.99,
+    "Description": "The WildRunner Ridgevent Stealth Hiking Backpack is the ultimate companion for your outdoor adventures. With its stealthy red color, this backpack combines style with functionality. Made from durable nylon and featuring multiple compartments, this backpack offers ample storage space for all your essentials. Whether you're venturing into the mountains or exploring hidden trails, the Ridgevent Stealth Hiking Backpack has got you covered.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 25,
+    "Name": "Stealth Lite Bike Helmet",
+    "Price": 89.99,
+    "Description": "The Daybird Stealth Lite Bike Helmet is designed for cyclists who value both safety and style. With its sleek matte silver color, this helmet will make you stand out on the road. The helmet features a lightweight in-mold construction, adjustable retention system, and multiple ventilation channels for optimal airflow. Stay protected and look cool with the Daybird Stealth Lite Bike Helmet.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 26,
+    "Name": "Gravity Beam Climbing Rope",
+    "Price": 179.99,
+    "Description": "The Gravitator Gravity Beam Climbing Rope is the perfect companion for vertical endeavors. This high-quality climbing rope features a kernmantle construction, providing excellent strength and durability. With its vibrant yellow color, the Gravity Beam Rope is highly visible and easy to work with. Whether you're tackling steep rock faces or conquering frozen waterfalls, trust the Gravitator Gravity Beam Climbing Rope to get you to the top.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 27,
+    "Name": "EcoLodge 45L Travel Backpack",
+    "Price": 129.00,
+    "Description": "The Green Equipment EcoLodge 45L Travel Backpack is a sustainable and versatile option for all your travel needs. With its earth-inspired green color, this backpack is not only stylish but also environmentally friendly. Made from recycled materials, this backpack features multiple compartments, a padded laptop sleeve, and durable zippers. Explore the world with the Green Equipment EcoLodge 45L Travel Backpack.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 28,
+    "Name": "Alpine Peak Down Jacket",
+    "Price": 249.99,
+    "Description": "The Solstix Alpine Peak Down Jacket is crafted for extreme cold conditions. With its bold red color and sleek design, this jacket combines style with functionality. Made with high-quality goose down insulation, the Alpine Peak Jacket provides exceptional warmth and comfort. The jacket features a removable hood, adjustable cuffs, and multiple zippered pockets for storage. Conquer the harshest weather with the Solstix Alpine Peak Down Jacket.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 29,
+    "Name": "Pulse Recon Tactical GPS Watch",
+    "Price": 169.00,
+    "Description": "The B&R Pulse Recon Tactical GPS Watch is a must-have for outdoor enthusiasts. This reliable navigation tool features a built-in GPS, altimeter, compass, and multiple sports modes. With its military green color and durable construction, the Pulse Recon watch is built to withstand your toughest adventures. Stay on track and keep track of your performance with the B&R Pulse Recon Tactical GPS Watch.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 30,
+    "Name": "Zero Gravity Ski Goggles",
+    "Price": 79.99,
+    "Description": "The Gravitator Zero Gravity Ski Goggles combine style, performance, and comfort for the ultimate ski experience. With their sleek white frame and red mirrored lenses, these goggles offer a futuristic look on the slopes. The goggles feature an anti-fog coating, 100% UV protection, and an adjustable strap for a secure fit. Enhance your vision and carve your way down the slopes with the Gravitator Zero Gravity Ski Goggles.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 31,
+    "Name": "Guardian Blue Chalk Bag",
+    "Price": 21.99,
+    "Description": "Stay focused on your route with the Guardian Blue Chalk Bag by Legend. This durable bag features a spacious compartment for your chalk, a drawstring closure, and a waist belt for easy access while climbing. The vibrant blue color adds a stylish touch to your climbing gear.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 32,
+    "Name": "Cosmic Purple Snowboard",
+    "Price": 419.99,
+    "Description": "Conquer the slopes with the Cosmic Purple Snowboard by Gravitator. This freestyle board delivers a perfect balance of control and maneuverability. Its bright purple design is complemented by the Gravitator emblem, sure to turn heads on the mountain.",
+    "VisibleIndividually": true,
+    "Published": true
+  },
+  {
+    "Id": 33,
+    "Name": "Venture Grey Trail Shoes",
+    "Price": 79.99,
+    "Description": "Hit the trails in style and comfort with the Venture Grey Trail Shoes by WildRunner. Constructed with breathable mesh and a rugged outsole, these shoes provide excellent traction and long-lasting durability. The versatile grey color makes them suitable for any adventure.",
+    "VisibleIndividually": true,
+    "Published": true
+  }
+]
