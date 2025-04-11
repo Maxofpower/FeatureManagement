@@ -7,6 +7,8 @@ This repository is a **central hub** for all the advanced .NET and ASP.NET Core 
 
 ### 🔹 What's Inside?  
 - ✅ **Feature Management & Feature Flags**
+- ✅ **Rabbitmq Eventbus**
+- ✅ **Aspire Ready**
 - ✅ **IdempotentFusion (Idempotent Api with optional lock)**
 - ✅ **Manual Mediator with Pipeline Behavior**  
 - ✅ **Api Versioning Strategies**  
@@ -29,7 +31,8 @@ Each feature is structured for **easy exploration** and **practical implementati
 This example demonstrates **distributed rate limiting** using **YARP (Yet Another Reverse Proxy)** and **Memcached**. This approach ensures that API rate limits are enforced consistently across distributed instances.  
 
 ### 🛠 Setup  
-
+#### 1️⃣ Start Apphost  
+or
 #### 1️⃣ Start Memcached  
 Run the following command to spin up Memcached:  
 
