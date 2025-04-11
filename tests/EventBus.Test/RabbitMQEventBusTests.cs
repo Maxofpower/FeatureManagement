@@ -55,6 +55,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 	[Fact]
 	public async Task Publishes_And_Processes_Failed_Events()
 	{
+		await _fixture.ResetRabbitMQ();
 		var testEvent = new FailingIntegrationEvent(Guid.NewGuid(), 110.0m);
 		await PublishAndVerifyDlq(testEvent);
 	}
@@ -154,6 +155,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 
 	private async Task PublishAndVerifyDlq(IntegrationEvent testEvent)
 	{
+		
 		using var channel = await CreateChannelAsync();
 		var dlqName = GetDlqName();
 

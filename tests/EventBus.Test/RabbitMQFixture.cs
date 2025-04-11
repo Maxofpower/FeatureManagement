@@ -40,7 +40,7 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 		var options = new DistributedApplicationOptions { AssemblyName = typeof(RabbitMQFixture).Assembly.FullName, DisableDashboard = true };
 		options.DisableDashboard = true;
 		var appBuilder = DistributedApplication.CreateBuilder(options);
-		var rabbitmq = appBuilder.AddRabbitMQ("eventbus")
+		var rabbitmq = appBuilder.AddRabbitMQ("eventbusTest")
 			.WithEnvironment("RABBITMQ_DEFAULT_USER", "guest")
 			.WithEnvironment("RABBITMQ_DEFAULT_PASS", "guest")
 			.WithEnvironment("RABBITMQ_DEFAULT_PERMISSIONS", ".* .* .*")
