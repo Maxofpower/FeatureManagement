@@ -34,7 +34,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\EventBusRabbitMQ\EventBus.csproj" />
+	  <ProjectReference Include="..\..\src\EventBusRabbitMQ\EventBus.csproj" IsAspireProjectResource="true"/>
 	  <ProjectReference Include="..\..\src\FeatureFusion\FeatureFusion.csproj" IsAspireProjectResource="false" />
 	
 		<!--<ProjectReference Include="..\..\src\FeatureFusion\FeatureFusion.csproj"  />-->

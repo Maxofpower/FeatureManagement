@@ -44,7 +44,7 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 			.WithEnvironment("RABBITMQ_DEFAULT_USER", "guest")
 			.WithEnvironment("RABBITMQ_DEFAULT_PASS", "guest")
 			.WithEnvironment("RABBITMQ_DEFAULT_PERMISSIONS", ".* .* .*")
-			.WithEndpoint(5672, targetPort: 5672, name: "amqp")
+			.WithEndpoint(5672, targetPort: Port, name: "amqp")
 			.WithEndpoint(15672, targetPort: 15672, name: "management");
 		
 		var username = appBuilder.AddParameter("username", secret: true, value: "username");
@@ -56,17 +56,16 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 				 container.WithEnvironment("PGADMIN_DEFAULT_EMAIL", "guest@admin.com");
 				 container.WithEnvironment("PGADMIN_DEFAULT_PASSWORD", "guest");
 			 })
-			.WithLifetime(ContainerLifetime.Persistent)
-			.WithEndpoint(5432, targetPort: 5432, name: "postgres");
+			.WithEndpoint(5432, targetPort: 5432, name: "postgresTest");
 
 		var appDb = postgres.AddDatabase("catalogdb");
 
 		var memcached = appBuilder.AddContainer("cache", "memcached", "alpine")
-			.WithEndpoint(11211, targetPort: 11211, name: "memcached");
+			.WithEndpoint(11211, targetPort: 11211, name: "memcachedTest");
 
 
-		var redis = appBuilder.AddRedis("redis")
-			.WithEndpoint(6379, targetPort: 6379, name: "redis")
+		var redis = appBuilder.AddRedis("redisTest")
+			.WithEndpoint(6379, targetPort: 6379, name: "redisTest")
 			.WithDataVolume("redis_data");
 
 		_app = appBuilder.Build();
