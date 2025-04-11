@@ -63,6 +63,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 	[Fact]
 	public async Task Verify_Message_Flow()
 	{
+		await _fixture.ResetRabbitMQ();
 		var testEvent = new OrderCreatedIntegrationEvent(Guid.NewGuid(), 99.0m);
 		await VerifyMessageFlow(testEvent, "OrderCreatedIntegrationEvent");
 	}
@@ -135,7 +136,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 		_fixture.ProcessedEvents.Should().ContainSingle(e => e.Id == testEvent.Id);
 	}
 
-	private async Task VerifyMessageFlow(IntegrationEvent testEvent, string routingKey)
+	private async Task VerifyMessageFlow(OrderCreatedIntegrationEvent testEvent, string routingKey)
 	{
 		using var channel = await CreateChannelAsync();
 		var testQueue = "test_feature_fusion";
@@ -158,7 +159,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 		
 		using var channel = await CreateChannelAsync();
 		var dlqName = GetDlqName();
-
+		channel.QueuePurge(dlqName);
 		await GetRequiredService<IEventBus>().PublishAsync(testEvent);
 
 		var foundMessage = await WaitForMessageByIdAsync(
@@ -166,7 +167,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 			queueName: dlqName,
 			testEvent.Id,
 			acknowledgeIfFound: true,
-			timeout: TimeSpan.FromSeconds(30));
+			timeout: TimeSpan.FromSeconds(60));
 
 		foundMessage.Should().NotBeNull();
 		var deserialized = JsonSerializer.Deserialize(

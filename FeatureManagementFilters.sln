@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D490ED24
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3DB72BEB-2859-41D8-A8B0-94773F7B4992}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBusRabbitMQ", "src\EventBusRabbitMQ\EventBusRabbitMQ.csproj", "{49420FF0-B7E0-4322-936E-A86602FF97A6}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFusion", "src\FeatureFusion\FeatureFusion.csproj", "{FCC13F57-1362-4CB1-8AD6-D61321859489}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFusion.ApiGateway", "src\FeatureFusion.ApiGateway\FeatureFusion.ApiGateway.csproj", "{96E80BB7-74A5-4711-A250-22046F488629}"
@@ -25,16 +23,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFusion.Test", "tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeatureFusion.ApiGateway.Test", "tests\FeatureFusion.ApiGateway.Test\FeatureFusion.ApiGateway.Test.csproj", "{BFE82C3A-5BC6-47BD-9A83-1B6F7CE66DAD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventBus", "src\EventBusRabbitMQ\EventBus.csproj", "{4FD656E8-F39B-455A-A2F0-4F3E3ED7B0DF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{49420FF0-B7E0-4322-936E-A86602FF97A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49420FF0-B7E0-4322-936E-A86602FF97A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49420FF0-B7E0-4322-936E-A86602FF97A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49420FF0-B7E0-4322-936E-A86602FF97A6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FCC13F57-1362-4CB1-8AD6-D61321859489}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FCC13F57-1362-4CB1-8AD6-D61321859489}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FCC13F57-1362-4CB1-8AD6-D61321859489}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,12 +63,15 @@ Global
 		{BFE82C3A-5BC6-47BD-9A83-1B6F7CE66DAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFE82C3A-5BC6-47BD-9A83-1B6F7CE66DAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFE82C3A-5BC6-47BD-9A83-1B6F7CE66DAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FD656E8-F39B-455A-A2F0-4F3E3ED7B0DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FD656E8-F39B-455A-A2F0-4F3E3ED7B0DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FD656E8-F39B-455A-A2F0-4F3E3ED7B0DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FD656E8-F39B-455A-A2F0-4F3E3ED7B0DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{49420FF0-B7E0-4322-936E-A86602FF97A6} = {3DB72BEB-2859-41D8-A8B0-94773F7B4992}
 		{FCC13F57-1362-4CB1-8AD6-D61321859489} = {3DB72BEB-2859-41D8-A8B0-94773F7B4992}
 		{96E80BB7-74A5-4711-A250-22046F488629} = {3DB72BEB-2859-41D8-A8B0-94773F7B4992}
 		{73C6243D-4053-4336-8AD0-CC7FCBD927AD} = {3DB72BEB-2859-41D8-A8B0-94773F7B4992}
@@ -81,5 +80,6 @@ Global
 		{16F7DFC6-234B-4589-A73F-77B50B0FCDDA} = {D490ED24-78D3-4991-B77A-88D654724217}
 		{D4E4D599-C3C1-48C9-8D92-79DF68A400BA} = {D490ED24-78D3-4991-B77A-88D654724217}
 		{BFE82C3A-5BC6-47BD-9A83-1B6F7CE66DAD} = {D490ED24-78D3-4991-B77A-88D654724217}
+		{4FD656E8-F39B-455A-A2F0-4F3E3ED7B0DF} = {3DB72BEB-2859-41D8-A8B0-94773F7B4992}
 	EndGlobalSection
 EndGlobal
