@@ -25,8 +25,10 @@ This repository is a **central hub** for all the advanced .NET and ASP.NET Core 
 Each feature is structured for **easy exploration** and **practical implementation**.  
 
 ---
-
-## ✨ Featured Example: Distributed Rate Limiting with YARP & Memcached  
+## ✨ RabbitMQ EventBus with Transactional Outbox/Inbox,Dlq,Idempotency
+### 🛠 Setup  
+#### 1️⃣ Start Apphost  
+## ✨ Distributed Rate Limiting with YARP & Memcached  
 
 This example demonstrates **distributed rate limiting** using **YARP (Yet Another Reverse Proxy)** and **Memcached**. This approach ensures that API rate limits are enforced consistently across distributed instances.  
 
@@ -64,12 +66,13 @@ Once the limit is reached, you’ll receive:
 
 ---
 
-## ✨ Featured Example: Advanced Feature Management with Feature Filters  
+## ✨ Advanced Feature Management with Feature Filters  
 
 This example demonstrates **feature management in ASP.NET Core** using feature filters. Feature filters allow conditional feature toggling based on factors like user claims, enabling personalized experiences.  
 
 ### 🛠 Setup  
-
+#### 1️⃣ Start Apphost  
+or
 #### 1️⃣ Start Memcached  
 To enable the **Memcached-based feature toggle**, run:  
 
