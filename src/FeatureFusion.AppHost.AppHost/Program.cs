@@ -8,7 +8,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 builder.AddForwardedHeaders();
 
-var memcached= builder.AddContainer("cache", "memcached", "alpine")
+var memcached = builder.AddContainer("memcached","memcached","alpine")
 	.WithEndpoint( 11211, targetPort: 11211, name: "memcached");
 
 var redis = builder.AddRedis("redis")
@@ -27,7 +27,6 @@ var rabbitMq = builder.AddRabbitMQ("eventbus")
 	.WithEndpoint(15672 ,targetPort: 15672, name: "management")
     .WithLifetime(ContainerLifetime.Persistent);
 
-
 var username = builder.AddParameter("username", secret: true, value: "username");
 var password = builder.AddParameter("password", secret: true, value: "password");
 var postgres = builder.AddPostgres(name:"postgres", userName:username, password:password)
@@ -39,21 +38,24 @@ var postgres = builder.AddPostgres(name:"postgres", userName:username, password:
 	.WithLifetime(ContainerLifetime.Persistent)
 	.WithEndpoint (5432, targetPort: 5432, name: "postgres");
 
-
-
 var catalogDb = postgres.AddDatabase("catalogdb");
 
 builder.AddProject<Projects.FeatureFusion>("featurefusion")
 	   .WithEndpoint(7762, targetPort: 5002, scheme: "https", name: "featurefusion-https")
-	   .WaitFor(memcached)
-	   .WaitFor(redis)
-	   .WithReference(rabbitMq)
-	   .WaitFor(rabbitMq)
-	   .WaitFor(postgres)
+	   .WaitFor(memcached).WithEnvironment("Memcached__Servers__0__Address", "localhost") // we already used docker friendly connection string in appsettings
+	   .WaitFor(redis).WithEnvironment("Redis__ConnectionString", "localhost:6379") // we already used docker friendly connection string in appsettings
+	   .WithReference(rabbitMq).WaitFor(rabbitMq)
+	   .WithReference(catalogDb).WaitFor(catalogDb);
 
-	  .WithReference(catalogDb);
-
-builder.Build().Run();
+try
+{
+	builder.Build().Run();
+}
+catch (Exception ex)
+{
+	Console.WriteLine($"Application failed: {ex.Message}");
+	throw;
+}
 
 
 

@@ -17,7 +17,7 @@ public partial class CatalogDContextSeed(
 	{
 		var contentRootPath = env.ContentRootPath;
 		var picturePath = env.WebRootPath;
-
+	
 	
 		context.Database.OpenConnection();
 		((NpgsqlConnection)context.Database.GetDbConnection()).ReloadTypes();

@@ -19,7 +19,6 @@ public class OutboxWorker<TDbContext> : BackgroundService where TDbContext : DbC
 	private readonly TimeSpan _interval = TimeSpan.FromSeconds(5);
 	private NpgsqlDataSource _dataSource;
 	private readonly int BatchSize = 20;
-	private readonly int _maxRetryCount = 3;
 	private const int MaxErrorLength = 500;
 
 
@@ -51,16 +50,6 @@ public class OutboxWorker<TDbContext> : BackgroundService where TDbContext : DbC
 			await Task.Delay(_interval, stoppingToken);
 		}
 	}
-
-	// with database supporting index
-	//private static readonly Func<TDbContext, CancellationToken, Task<List<OutboxMessage>>> _getPendingMessages =
-	//	EF.CompileAsyncQuery((TDbContext ctx, CancellationToken ct) =>
-	//		ctx.Set<OutboxMessage>()
-	//			.Where(m => m.Status == MessageStatus.Pending ||
-	//					   (m.Status == MessageStatus.Failed && m.RetryCount < 3))
-	//			.OrderBy(m => m.CreatedAt)
-	//			.Take(200)
-	//			.ToList());
 
 	private async Task ProcessPendingMessagesAsync(CancellationToken stoppingToken)
 	{

@@ -8,21 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\Persons - Copy\**" />
-    <Compile Remove="Features\Person\**" />
-    <Content Remove="Features\Persons - Copy\**" />
-    <Content Remove="Features\Person\**" />
-    <EmbeddedResource Remove="Features\Persons - Copy\**" />
-    <EmbeddedResource Remove="Features\Person\**" />
-    <None Remove="Features\Persons - Copy\**" />
-    <None Remove="Features\Person\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Features\Order\Commands\CreateOrderCommandVoidHandler.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />

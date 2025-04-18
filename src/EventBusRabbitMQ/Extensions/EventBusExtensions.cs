@@ -37,7 +37,6 @@ public static class EventBusExtensions
 		builder.Services.AddSingleton<IHostedService>(sp =>
 			(EventBus)sp.GetRequiredService<IEventBus>());
 
-		
 
 		builder.Services.AddSingleton<EventBusSubscriptionInfo>();
 
@@ -66,8 +65,6 @@ public static class EventBusExtensions
 
 		builder.Services.AddDbContextFactory<EventBusDbContext>((provider, options) =>
 		{
-			//var configuration = provider.GetRequiredService<IConfiguration>();
-			//var connectionString = configuration.GetConnectionString(connectionString);
 
 			options.UseNpgsql(connectionString)
 				   .ConfigureWarnings(warnings =>
