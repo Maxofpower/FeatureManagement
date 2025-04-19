@@ -2,7 +2,9 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine AS build
 WORKDIR /app
 
-
+ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_ENVIRONMENT=Production
+COPY  src/FeatureFusion/appsettings.Production.json ./src/FeatureFusion/appsettings.Production.json
 COPY src/FeatureFusion/FeatureFusion.csproj ./src/FeatureFusion/
 COPY src/EventBusRabbitMQ/EventBus.csproj ./src/EventBusRabbitMQ/
 COPY src/FeatureFusion.AppHost.ServiceDefaults/FeatureFusion.AppHost.ServiceDefaults.csproj ./src/FeatureFusion.AppHost.ServiceDefaults/
@@ -20,6 +22,7 @@ RUN dotnet publish src/FeatureFusion/FeatureFusion.csproj -c Release -o /app/out
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-alpine AS final
 WORKDIR /app
 
+RUN test -f "appsettings.Production.json" || echo "Production config missing!"
 
 RUN apk add --no-cache bash curl && \
     curl -sSL https://github.com/vishnubob/wait-for-it/releases/download/v2.8.0/wait-for-it.sh -o /wait-for-it.sh && \

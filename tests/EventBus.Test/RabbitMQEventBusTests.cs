@@ -37,6 +37,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 					options.SubscriptionClientName = "feature_fusion";
 					options.RetryCount = 3;
 				});
+				builder.ConfigureAppConfiguration(config => config.AddJsonFile("appsettings.Test.json",false));
 			});
 		});
 		_services = _webApplicationFactory.Services;
@@ -138,6 +139,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 
 	private async Task VerifyMessageFlow(OrderCreatedIntegrationEvent testEvent, string routingKey)
 	{
+		_fixture.ProcessedEvents.Clear();
 		using var channel = await CreateChannelAsync();
 		var testQueue = "test_feature_fusion";
 

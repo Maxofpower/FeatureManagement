@@ -22,20 +22,34 @@ services:
       timeout: 3s
       retries: 5
 
-  rabbitmq:
-    image: rabbitmq:4.0
-    hostname: eventbus  
+  eventbus:
+    image: rabbitmq:management
+    hostname: eventbus 
+    container_name: eventbus 
+    networks:
+      default:
+        aliases:
+          - rabbitmq  
+          - eventbus  
     ports:
       - "5672:5672"
       - "15672:15672"
     environment:
       RABBITMQ_DEFAULT_USER: guest  
       RABBITMQ_DEFAULT_PASS: guest 
+      RABBITMQ_DEFAULT_VHOST: /
+      RABBITMQ_NODENAME: rabbit@eventbus  
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-proto_dist inet_tcp"
+      RABBITMQ_DEFAULT_PERMISSIONS: "guest . \".*\" \".*\""
+
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+
 
   postgres:
     image: postgres:15-alpine
@@ -80,7 +94,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      rabbitmq:
+      eventbus:
         condition: service_healthy
       memcached:
         condition: service_healthy
@@ -88,7 +102,7 @@ services:
       sh -c "
         while ! nc -z postgres 5432; do sleep 1; done &&
         while ! nc -z redis 6379; do sleep 1; done &&
-        while ! nc -z eventbus 5672; do sleep 1; done &&
+        while ! nc -z eventbus 5672;do sleep 1; done &&
         while ! nc -z memcached 11211; do sleep 1; done &&
         echo 'All dependencies ready' &&
         dotnet FeatureFusion.dll
@@ -97,3 +111,4 @@ services:
 volumes:
   redis_data:
   postgres_data:
+  rabbitmq-data:    

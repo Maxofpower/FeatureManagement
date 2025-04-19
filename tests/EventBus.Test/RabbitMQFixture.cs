@@ -19,6 +19,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Threading;
 
 namespace EventBus.Tests;
@@ -40,6 +41,7 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 		var options = new DistributedApplicationOptions { AssemblyName = typeof(RabbitMQFixture).Assembly.FullName, DisableDashboard = true };
 		options.DisableDashboard = true;
 		var appBuilder = DistributedApplication.CreateBuilder(options);
+
 		var rabbitmq = appBuilder.AddRabbitMQ("eventbusTest")
 			.WithEnvironment("RABBITMQ_DEFAULT_USER", "guest")
 			.WithEnvironment("RABBITMQ_DEFAULT_PASS", "guest")
@@ -60,7 +62,7 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 
 		var appDb = postgres.AddDatabase("catalogdb");
 
-		var memcached = appBuilder.AddContainer("cache", "memcached", "alpine")
+		var memcached = appBuilder.AddContainer("memcached", "memcached", "alpine")
 			.WithEndpoint(11211, targetPort: 11211, name: "memcachedTest");
 
 
@@ -68,16 +70,22 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 			.WithEndpoint(6379, targetPort: 6379, name: "redisTest")
 			.WithDataVolume("redis_data");
 
+		appBuilder.Configuration.Sources.Clear();
 		_app = appBuilder.Build();
 	}
 	protected override IHost CreateHost(IHostBuilder builder)
 	{
 
+	
 		builder.ConfigureHostConfiguration(config =>
 		{
 			config.AddInMemoryCollection(new[]
 			{
-				new KeyValuePair<string, string>("ConnectionStrings:eventbus", _rabbitMqConnectionString)
+				new KeyValuePair<string, string>("ConnectionStrings:eventbus", _rabbitMqConnectionString),
+				new KeyValuePair<string, string>("Redis:ConnectionString", "localhost:6379,abortConnect=false"),
+				new KeyValuePair<string, string>("catalogdb:ConnectionString:",
+				  "Host=lcalhost;Port=5432;Username=username;Password=password;Database=eventstore;")
+
 			});
 		});
 
@@ -114,13 +122,14 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 			});
 		});
 
+		builder.ConfigureAppConfiguration(builder => builder.AddJsonFile("appsettings.Test.json",optional:false));
 
 		return base.CreateHost(builder);
 	}
 
 	public async Task InitializeAsync()
 	{
-
+	
 		await _app.StartAsync();
 		await WaitForRabbitMQ();
 	}
