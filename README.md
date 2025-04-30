@@ -7,7 +7,7 @@ This repository is a **central hub** for all the advanced .NET and ASP.NET Core 
 
 ### 🔹 What's Inside?  
 - ✅ **Feature Management & Feature Flags**
-- ✅ **Rabbitmq Eventbus**
+- ✅ **Rabbitmq Eventbus Ready for Miroservices**
 - ✅ **Aspire Orchestration**
 - ✅ **Aspire App Host Integration Tests**
 - ✅ **IdempotentFusion (Idempotent Api with optional lock)**
