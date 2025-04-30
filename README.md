@@ -8,7 +8,8 @@ This repository is a **central hub** for all the advanced .NET and ASP.NET Core 
 ### 🔹 What's Inside?  
 - ✅ **Feature Management & Feature Flags**
 - ✅ **Rabbitmq Eventbus**
-- ✅ **Aspire Ready**
+- ✅ **Aspire Orchestration**
+- ✅ **Aspire App Host Integration Tests**
 - ✅ **IdempotentFusion (Idempotent Api with optional lock)**
 - ✅ **Manual Mediator with Pipeline Behavior**  
 - ✅ **Api Versioning Strategies**  
@@ -23,6 +24,7 @@ This repository is a **central hub** for all the advanced .NET and ASP.NET Core 
 - 🧩 **Design Patterns**  
 
 Each feature is structured for **easy exploration** and **practical implementation**.  
+Functional Tests need Docker installed and running.
 
 ---
 ## ✨ RabbitMQ EventBus with Transactional Outbox/Inbox,Dlq,Idempotency
