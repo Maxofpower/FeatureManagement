@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Concurrent;
@@ -22,7 +23,7 @@ using System.Linq;
 using System.Reflection.PortableExecutable;
 using System.Threading;
 
-namespace EventBus.Tests;
+namespace EventBus.Test;
 
 public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLifetime
 {
@@ -42,52 +43,47 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 		options.DisableDashboard = true;
 		var appBuilder = DistributedApplication.CreateBuilder(options);
 
-		var rabbitmq = appBuilder.AddRabbitMQ("eventbusTest")
+		var rabbitmq = appBuilder.AddRabbitMQ("eventbusTest", port: 5672)
+			.WithContainerName("eventbusTest")
 			.WithEnvironment("RABBITMQ_DEFAULT_USER", "guest")
 			.WithEnvironment("RABBITMQ_DEFAULT_PASS", "guest")
+
 			.WithEnvironment("RABBITMQ_DEFAULT_PERMISSIONS", ".* .* .*")
-			.WithEndpoint(5672, targetPort: Port, name: "amqp")
-			.WithEndpoint(15672, targetPort: 15672, name: "management");
-		
+			//.WithEndpoint(5672, targetPort: Port, name: "amqp")
+			.WithEndpoint(port: 15672, targetPort: 15672, name: "management");
+
 		var username = appBuilder.AddParameter("username", secret: true, value: "username");
 		var password = appBuilder.AddParameter("password", secret: true, value: "password");
 
 		var postgres = appBuilder.AddPostgres("postgresTest", userName: username, password: password)
+			 .WithContainerName("postgresTest")
 			 .WithPgAdmin(container =>
 			 {
 				 container.WithEnvironment("PGADMIN_DEFAULT_EMAIL", "guest@admin.com");
 				 container.WithEnvironment("PGADMIN_DEFAULT_PASSWORD", "guest");
 			 })
-			.WithEndpoint(5432, targetPort: 5432, name: "postgresTest");
+			.WithEndpoint(5432, targetPort: 5432, name: "postgres");
 
 		var appDb = postgres.AddDatabase("catalogdb");
 
-		var memcached = appBuilder.AddContainer("memcached", "memcached", "alpine")
-			.WithEndpoint(11211, targetPort: 11211, name: "memcachedTest");
+		var memcached = appBuilder.AddContainer("memcachedTest", "memcached", "alpine")
+			.WithEndpoint(11211, targetPort: 11211, name: "memcached")
+			.WithContainerName("memcachedTest");
 
 
-		var redis = appBuilder.AddRedis("redisTest")
-			.WithEndpoint(6379, targetPort: 6379, name: "redisTest")
-			.WithDataVolume("redis_data");
+		var redis = appBuilder.AddRedis("redisTest", port: 6379)
+			.WithContainerName("redisTest")
+			 .WithEndpoint(targetPort: 6379, name: "redis").WithEnvironment("REDIS_OPTIONS", "--bind 0.0.0.0 --protected-mode no")
+			.WithDataVolume("redis_data")
+			 .WithEnvironment("REDIS_HOST", "localhost");
 
-		appBuilder.Configuration.Sources.Clear();
+
+
 		_app = appBuilder.Build();
 	}
 	protected override IHost CreateHost(IHostBuilder builder)
 	{
-
 	
-		builder.ConfigureHostConfiguration(config =>
-		{
-			config.AddInMemoryCollection(new[]
-			{
-				new KeyValuePair<string, string>("ConnectionStrings:eventbus", _rabbitMqConnectionString),
-				new KeyValuePair<string, string>("Redis:ConnectionString", "localhost:6379,abortConnect=false"),
-				new KeyValuePair<string, string>("catalogdb:ConnectionString:",
-				  "Host=lcalhost;Port=5432;Username=username;Password=password;Database=eventstore;")
-
-			});
-		});
 
 		// to test events
 		builder.ConfigureServices(services =>
@@ -122,14 +118,13 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 			});
 		});
 
-		builder.ConfigureAppConfiguration(builder => builder.AddJsonFile("appsettings.Test.json",optional:false));
 
 		return base.CreateHost(builder);
 	}
 
 	public async Task InitializeAsync()
 	{
-	
+
 		await _app.StartAsync();
 		await WaitForRabbitMQ();
 	}

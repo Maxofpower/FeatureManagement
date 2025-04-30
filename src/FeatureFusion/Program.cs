@@ -19,6 +19,12 @@ using static RedisSettings;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration
+	.SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+	.AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: false, reloadOnChange: true)
+	.AddEnvironmentVariables(); 
+
 builder.AddServiceDefaults();
 
 // Use the generic method for JWT Authentication

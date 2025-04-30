@@ -12,7 +12,6 @@ namespace FeatureFusion.Controllers.V2
 
 	[ApiController]
 	[Route("api/v{version:apiVersion}/[controller]")]
-
 	public class GreetingController : ControllerBase
 	{
 		private readonly IFeatureManagerSnapshot _featureManager;
@@ -58,8 +57,6 @@ namespace FeatureFusion.Controllers.V2
 
 			return TypedResults.Ok("Hello Anonymous user V2!");
 		}
-
-		// to test idempotent-filter
 		
 	}
 

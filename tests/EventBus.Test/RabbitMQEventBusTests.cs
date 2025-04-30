@@ -16,7 +16,9 @@ using System.Text.Json;
 using EventBusRabbitMQ.Infrastructure.EventBus;
 
 [assembly: CollectionBehavior(DisableTestParallelization = true)]
-namespace EventBus.Tests;
+
+namespace EventBus.Test;
+
 
 public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, IAsyncLifetime
 {
@@ -37,7 +39,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 					options.SubscriptionClientName = "feature_fusion";
 					options.RetryCount = 3;
 				});
-				builder.ConfigureAppConfiguration(config => config.AddJsonFile("appsettings.Test.json",false));
+			
 			});
 		});
 		_services = _webApplicationFactory.Services;
@@ -49,7 +51,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 	[Fact]
 	public async Task Publishes_And_Processes_Events()
 	{
-		await TestEventProcessing<OrderCreatedIntegrationEvent>(
+		await TestEventProcessing(
 			() => new OrderCreatedIntegrationEvent(Guid.NewGuid(), 99.0m));
 	}
 
@@ -87,7 +89,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 		// Act - Second publish
 		_fixture.ProcessedEvents.Clear();
 		await eventBus.PublishAsync(testEvent);
-		await Task.Delay(50000); // Brief delay
+		await Task.Delay(5000); // Brief delay
 
 		// Assert - Not processed again
 		_fixture.ProcessedEvents.Should().BeEmpty();
@@ -158,7 +160,7 @@ public class RabbitMQEventBusIntegrationTests : IClassFixture<RabbitMQFixture>, 
 
 	private async Task PublishAndVerifyDlq(IntegrationEvent testEvent)
 	{
-		
+
 		using var channel = await CreateChannelAsync();
 		var dlqName = GetDlqName();
 		channel.QueuePurge(dlqName);
