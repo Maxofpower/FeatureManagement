@@ -1,7 +1,7 @@
 ﻿using Asp.Versioning.Conventions;
+using FeatureFusion.Domain.Entities;
+using FeatureFusion.Dtos;
 using FeatureFusion.Infrastructure.Exetnsion;
-using FeatureFusion.Models;
-using FeatureManagementFilters.Models;
 using FeatureManagementFilters.Services.ProductService;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -39,22 +39,22 @@ namespace FeatureManagementFilters.API.V2
 			// Approach 1: Using a generic endpoint filter with `AddEndpointFilter`
 			// This approach applies validation by adding a generic endpoint filter to the route.
 			api.MapPost("/person-endpointfilter", HandleCreatePerson)
-			   .AddEndpointFilter<ValidationFilter<Person>>();
+			   .AddEndpointFilter<ValidationFilter<PersonDto>>();
 
 			// Approach 2: Using a generic endpoint extension method with `WithValidation`
 			// This approach applies validation fluently using a custom extension method.
 			api.MapPost("/person-builderextension", HandleCreatePerson)
-			   .WithValidation<Person>();
+			   .WithValidation<PersonDto>();
 
 			// Approach 3: Using a custom route handler builder extension
 			// This approach encapsulates the endpoint definition and validation in a single method.
-			api.MapPostWithValidation<Person>("/person-genericendpoint", HandleCreatePerson);
+			api.MapPostWithValidation<PersonDto>("/person-genericendpoint", HandleCreatePerson);
 			
 
 			return api;
 		}
 		
-		public static async Task<Results<Ok<IList<ProductPromotion>>, NotFound<string>>> GetProductPromotion(
+		public static async Task<Results<Ok<IList<ProductPromotionDto>>, NotFound<string>>> GetProductPromotion(
 	         IProductService productService,  
 			 bool getFromMemCach = false)
 		{
@@ -72,26 +72,24 @@ namespace FeatureManagementFilters.API.V2
 			}
 		}
 
-		public static async Task<Results<Ok<List<ProductPromotion>>, NotFound<string>>> GetProductRocemmendation(
+		public static async Task<Results<Ok<List<ProductPromotionDto>>, NotFound<string>>> GetProductRocemmendation(
 	 IProductService productService)
 		{
 			try
 			{
 				var recommedation = await productService.GetProductRocemmendationAsync();
 
-				// Return TypedResults.Ok with a list of ProductPromotion
 				return TypedResults.Ok(recommedation);
 			}
 			catch
 			{
-				// Return TypedResults.NotFound with an error message
 				return TypedResults.NotFound("An error occurred while fetching promotions.");
 			}
 		}
 
 		// 1- to present manual Validation handling with dipendency injection
 		public static async Task<Results<Ok<string>, BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting
-			([AsParameters] Greeting greeting,
+			([AsParameters] GreetingDto greeting,
 			GreetingValidator validator,
 			IFeatureManager featureManager,
 			ILogger<GreetingValidator> _logger)
@@ -102,7 +100,7 @@ namespace FeatureManagementFilters.API.V2
 			if (!validationResult.IsValid)
 			{
 				_logger.LogWarning("validation error on {GreetingType}: {Errors}",
-					nameof(Greeting), validationResult.ProblemDetails!.Errors);
+					nameof(GreetingDto), validationResult.ProblemDetails!.Errors);
 
 				// Return problem details if validation fails
 				return TypedResults.BadRequest(validationResult.ProblemDetails);
@@ -120,7 +118,7 @@ namespace FeatureManagementFilters.API.V2
 
 		// 2- to present dynamic Validation with generic endpoint filter
 		public static async Task<Results<Ok<string>, BadRequest<ValidationProblemDetails>, NotFound<string>>> HandleCreatePerson
-		([AsParameters] Person person,
+		([AsParameters] PersonDto person,
 		IFeatureManager featureManager)
 		{
 
@@ -134,7 +132,7 @@ namespace FeatureManagementFilters.API.V2
 
 		// 3- to present dynamic Validation with generic ModelBinder
 		public static async Task<Results<Ok<string>, BadRequest<ValidationProblemDetails>, NotFound<string>>> HandleCreatePerson2
-			([AsParameters] Person person,
+			([AsParameters] PersonDto person,
 		IFeatureManager featureManager)
 		{
 

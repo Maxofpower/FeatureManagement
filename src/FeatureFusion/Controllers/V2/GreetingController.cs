@@ -1,4 +1,5 @@
-﻿using FeatureFusion.Infrastructure.Filters;
+﻿using FeatureFusion.Dtos;
+using FeatureFusion.Infrastructure.Filters;
 using FeatureFusion.Models;
 using FeatureManagementFilters.Models;
 using FeatureManagementFilters.Services.FeatureToggleService;
@@ -34,7 +35,7 @@ namespace FeatureFusion.Controllers.V2
 		[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))] // Ok<string>
 		[ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ValidationProblemDetails))] // BadRequest<ValidationProblemDetails>
 		[ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(string))] // NotFound<string>	
-		public async Task<Results<Ok<string>, BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting(Greeting greeting)
+		public async Task<Results<Ok<string>, BadRequest<ValidationProblemDetails>, NotFound<string>>> GetCustomGreeting(GreetingDto greeting)
 		{
 
 			var validationResult = await _validator.ValidateWithResultAsync(greeting);
@@ -46,7 +47,7 @@ namespace FeatureFusion.Controllers.V2
 			}
 
 			//for testing purpose -  a static customer
-			var user = new User("Admin", true, false);
+			var user = new UserDto("Admin", true, false);
 
 			bool greetingAccess = await _featureToggleService.CanAccessFeatureAsync(user); // ✅ Evaluates all rules
 

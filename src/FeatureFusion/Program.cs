@@ -105,7 +105,10 @@ ConfigureRequestPipeline(app);
 
 void ConfigureSwaggerUI(WebApplication app)
 {
-	app.UseSwagger();
+	app.UseSwagger(c=>
+	{
+		c.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi2_0;
+	});
 	app.UseSwaggerUI(options =>
 	{
 		var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();

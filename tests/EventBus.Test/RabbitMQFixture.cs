@@ -84,7 +84,6 @@ public sealed class RabbitMQFixture : WebApplicationFactory<Program>, IAsyncLife
 	protected override IHost CreateHost(IHostBuilder builder)
 	{
 	
-
 		// to test events
 		builder.ConfigureServices(services =>
 		{

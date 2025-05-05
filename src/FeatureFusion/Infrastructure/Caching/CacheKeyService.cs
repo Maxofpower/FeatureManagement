@@ -1,5 +1,6 @@
 ﻿namespace FeatureManagementFilters.Infrastructure
 {
+	using FeatureFusion.Domain.Entities;
 	using global::FeatureManagementFilters.Infrastructure.Caching;
 	using global::FeatureManagementFilters.Models;
 	using System.Collections.Generic;
