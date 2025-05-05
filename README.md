@@ -11,6 +11,7 @@ This repository is a **central hub** for all the advanced .NET and ASP.NET Core 
 - ✅ **Aspire Orchestration**
 - ✅ **Aspire App Host Integration Tests**
 - ✅ **IdempotentFusion (Idempotent Api with optional lock)**
+- ✅ **Reusable Generic Cursor Pagination**
 - ✅ **Manual Mediator with Pipeline Behavior**  
 - ✅ **Api Versioning Strategies**  
 - ✅ **Generic and Reusable Api Validations**  
