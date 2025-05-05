@@ -1,10 +1,10 @@
 ﻿using FeatureFusion.Infrastructure.EntitiyConfiguration;
-using FeatureManagementFilters.Models;
 using Microsoft.EntityFrameworkCore;
 using EventBusRabbitMQ.Extensions;
 using EventBusRabbitMQ.Domain;
 using EventBusRabbitMQ.Infrastructure.Context;
 using System.ComponentModel.DataAnnotations.Schema;
+using FeatureFusion.Domain.Entities;
 
 namespace FeatureFusion.Infrastructure.Context;
 

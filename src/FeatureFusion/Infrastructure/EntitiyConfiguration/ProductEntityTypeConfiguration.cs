@@ -1,4 +1,4 @@
-﻿using FeatureManagementFilters.Models;
+﻿using FeatureFusion.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using static Grpc.Core.Metadata;
@@ -18,7 +18,22 @@ class ProductEntityTypeConfiguration
 
 		builder.Property(ci => ci.Name);
 
+		builder.Property(p => p.CreatedAt)
+		 .HasConversion(
+			 v => v,                         
+			 v => DateTime.SpecifyKind(v, DateTimeKind.Utc) 
+		 );
 
-		builder.HasIndex(ci => ci.Name);
+		builder.HasIndex(ci => ci.Name)
+			.HasDatabaseName("IX_products_name"); ;
+
+
+		builder.HasIndex(ci => ci.CreatedAt)
+			.IsDescending(false)
+			.HasDatabaseName("IX_products_created_at_asc");
+
+		builder.HasIndex(ci => ci.CreatedAt)
+			.IsDescending(true)
+			.HasDatabaseName("IX_products_created_at_desc");
 	}
 }

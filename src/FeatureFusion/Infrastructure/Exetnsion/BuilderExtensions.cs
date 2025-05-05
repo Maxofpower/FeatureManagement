@@ -1,7 +1,6 @@
 ﻿using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Conventions;
-using FeatureFusion.Features.Order.Commands;
 using FeatureFusion.Features.Order.IntegrationEvents;
 using FeatureFusion.Features.Order.IntegrationEvents.EventHandling;
 using FeatureFusion.Features.Order.IntegrationEvents.Events;
@@ -9,6 +8,7 @@ using FeatureFusion.Infrastructure.Caching;
 using FeatureFusion.Infrastructure.Context;
 using FeatureFusion.Infrastructure.CQRS;
 using FeatureFusion.Infrastructure.CQRS.Adapter;
+using FeatureFusion.Infrastructure.Filters;
 using FeatureFusion.Infrastructure.ValidationProvider;
 using FeatureFusion.Models;
 using FeatureManagementFilters.Infrastructure.Caching;
@@ -32,7 +32,7 @@ using StackExchange.Redis;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
+using static FeatureFusion.Features.Orders.Commands.CreateOrderCommandHandler;
 using static Microsoft.IO.RecyclableMemoryStreamManager;
 
 namespace FeatureFusion.Infrastructure.Exetnsion
@@ -80,6 +80,7 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 		{
 			services.AddSwaggerGen(c =>
 			{
+				c.EnableAnnotations();
 				var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
 				foreach (var description in provider.ApiVersionDescriptions)
 				{
@@ -88,6 +89,8 @@ namespace FeatureFusion.Infrastructure.Exetnsion
 						Title = "API",
 						Version = description.ApiVersion.ToString()
 					});
+					c.UseAllOfToExtendReferenceSchemas();
+					c.SchemaFilter<EnumSchemaFilter>();
 				}
 
 				// Add JWT Authentication to Swagger

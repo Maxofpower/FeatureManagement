@@ -1,5 +1,5 @@
 ﻿
-using FeatureManagementFilters.Models;
+using FeatureFusion.Dtos;
 using FeatureManagementFilters.Pipeline;
 using Microsoft.FeatureManagement;
 
@@ -16,7 +16,7 @@ namespace FeatureManagementFilters.Services.FeatureToggleService
 			_featureManager = featureManager;		
 		}
 
-		public async Task<bool> CanAccessFeatureAsync(User user)
+		public async Task<bool> CanAccessFeatureAsync(UserDto user)
 		{
 			_validateRules.AddRule(async user => await _featureManager.IsEnabledAsync("CustomGreeting"));
 			_validateRules.AddRule(user => Task.FromResult(user.Role == "Amin"));
@@ -26,6 +26,6 @@ namespace FeatureManagementFilters.Services.FeatureToggleService
 	}
 	public interface IFeatureToggleService
 	{
-		Task<bool> CanAccessFeatureAsync(User user);
+		Task<bool> CanAccessFeatureAsync(UserDto user);
 	}
 }

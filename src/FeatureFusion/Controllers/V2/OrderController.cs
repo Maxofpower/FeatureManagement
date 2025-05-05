@@ -1,12 +1,11 @@
-﻿using FeatureFusion.Features.Order.Commands;
-using FeatureFusion.Infrastructure.Filters;
+﻿using FeatureFusion.Infrastructure.Filters;
 using FeatureFusion.Infrastructure.CQRS;
-using FeatureFusion.Models;
 using FeatureManagementFilters.Models;
 using FeatureManagementFilters.Services.FeatureToggleService;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using static FeatureFusion.Features.Order.Commands.CreateOrderCommandHandler;
+using static FeatureFusion.Features.Orders.Commands.CreateOrderCommandHandler;
+using FeatureFusion.Features.Orders.Commands;
 
 
 namespace FeatureFusion.Controllers.V2

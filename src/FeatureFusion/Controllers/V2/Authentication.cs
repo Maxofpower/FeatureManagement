@@ -1,4 +1,4 @@
-﻿using FeatureManagementFilters.Models;
+﻿using FeatureFusion.Dtos;
 using FeatureManagementFilters.Services.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,7 +17,7 @@ namespace FeatureManagementFilters.Controllers.V2
 		}
 
 		[HttpPost("login")]
-		public IActionResult Login([FromBody] Login login)
+		public IActionResult Login([FromBody] LoginDto login)
 		{
 			if (_authService.ValidateVipUser(login.Username, login.Password))
 			{

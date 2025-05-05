@@ -1,11 +1,10 @@
-﻿using FeatureFusion.Infrastructure.Exetnsion;
+﻿using FeatureFusion.Domain.Entities;
+using FeatureFusion.Infrastructure.Exetnsion;
 using FeatureManagementFilters.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using System.Text.Json;
-
-
 
 namespace FeatureFusion.Infrastructure.Context;
 
@@ -21,9 +20,11 @@ public partial class CatalogDContextSeed(
 	
 		context.Database.OpenConnection();
 		((NpgsqlConnection)context.Database.GetDbConnection()).ReloadTypes();
+		
 
 		if (!context.Product.Any())
 		{
+
 			var sourcePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Setup", "catalog.json");
 			var sourceJson = File.ReadAllText(sourcePath);
 			var sourceItems = JsonSerializer.Deserialize<CatalogSourceEntry[]>(sourceJson);
@@ -34,8 +35,8 @@ public partial class CatalogDContextSeed(
 			{
 				Id = source.Id,
 				Name = source.Name,
-			
 				Price = source.Price,
+				CreatedAt=source.CreatedAt
 			
 			}).ToArray();
 
@@ -53,5 +54,6 @@ public partial class CatalogDContextSeed(
 		public string Name { get; set; }
 		public string Description { get; set; }
 		public decimal Price { get; set; }
+		public DateTime CreatedAt { get; set; }
 	}
 }

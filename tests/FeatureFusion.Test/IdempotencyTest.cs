@@ -1,8 +1,8 @@
 ﻿using Castle.Core.Logging;
 using FeatureFusion.Controllers.V2;
+using FeatureFusion.Features.Orders.Commands;
 using FeatureFusion.Infrastructure.Caching;
 using FeatureFusion.Infrastructure.CQRS;
-using FeatureFusion.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;

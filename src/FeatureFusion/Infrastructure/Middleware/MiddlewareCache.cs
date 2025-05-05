@@ -1,5 +1,5 @@
-﻿using FeatureManagementFilters.Infrastructure.Caching;
-using FeatureManagementFilters.Models;
+﻿using FeatureFusion.Dtos;
+using FeatureManagementFilters.Infrastructure.Caching;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 
@@ -24,7 +24,7 @@ public class RecommendationCacheMiddleware
 			var cacheKey = GenerateUserSpecificCacheKey(context);
 
 			// Attempt to fetch cached data
-			var cachedResponse = await _cacheService.TryGetAsync<List<ProductPromotion>>(cacheKey) ?? [];
+			var cachedResponse = await _cacheService.TryGetAsync<List<ProductPromotionDto>>(cacheKey) ?? [];
 			if (cachedResponse is not null && cachedResponse.Count > 0)
 			{
 				context.Response.ContentType = "application/json";
@@ -34,15 +34,12 @@ public class RecommendationCacheMiddleware
 
 			// Cache the response if not found
 			await CacheRecommendationResponseAsync(context, cacheKey, TimeSpan.FromMinutes(10));
-		
 		}
 		else
 		{
 			await _next(context);
 			return;
-		}
-		
-
+		}	
 	}
 
 	private static CacheKey GenerateUserSpecificCacheKey(HttpContext context)
@@ -69,7 +66,7 @@ public class RecommendationCacheMiddleware
 				memoryStream.Seek(0, SeekOrigin.Begin);
 				var responseBody = await new StreamReader(memoryStream).ReadToEndAsync();
 
-				var recommendations = JsonSerializer.Deserialize<List<ProductPromotion>>(responseBody);
+				var recommendations = JsonSerializer.Deserialize<List<ProductPromotionDto>>(responseBody);
 
 				// Cache the deserialized object
 				await _cacheService.SetAsync(cacheKey, recommendations);
