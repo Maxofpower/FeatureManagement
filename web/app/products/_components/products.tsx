@@ -42,10 +42,7 @@ export const ProductsPage = (props: Props) => {
                                                 <img src="/image/apple.jpeg" alt={product.name} className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]" />
                                             </div>
                                             <div className="mt-4 flex items-start justify-between gap-3">
-                                                <div>
-                                                    <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{product.createdAt}</p>
-                                                    <h2 className="mt-1 text-lg font-medium tracking-[-0.02em]">{product.name}</h2>
-                                                </div>
+                                                <h2 className="mt-1 text-lg font-medium tracking-[-0.02em]">{product.name}</h2>
                                                 <p className="text-sm font-medium">${product.price}</p>
                                             </div>
                                             <p className="mt-2 max-w-xs text-sm leading-6 text-muted-foreground">{product.description}</p>

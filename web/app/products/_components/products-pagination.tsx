@@ -45,11 +45,6 @@ export const ProductsPagination = ({ products, currentFilters }: Props) => {
 
   return (
     <div className="flex flex-col items-center gap-2">
-      {products.totalCount > 0 && (
-        <p className="text-sm text-muted-foreground">
-          Showing {products.items.length} of {products.totalCount} products
-        </p>
-      )}
       <Pagination>
         <PaginationContent>
           <PaginationItem>

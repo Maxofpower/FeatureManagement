@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -197,11 +198,13 @@ export const ProductsFilters = ({ currentFilters }: Props) => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {PRODUCT_SORT_FIELDS.map((field) => (
-                    <SelectItem key={field} value={field}>
-                      {SORT_FIELD_LABELS[field]}
-                    </SelectItem>
-                  ))}
+                  <SelectGroup>
+                    {PRODUCT_SORT_FIELDS.map((field) => (
+                      <SelectItem key={field} value={field}>
+                        {SORT_FIELD_LABELS[field]}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 </SelectContent>
               </Select>
               <FieldError message={formErrors.sortBy} />
@@ -219,11 +222,13 @@ export const ProductsFilters = ({ currentFilters }: Props) => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {PRODUCT_SORT_DIRECTIONS.map((direction) => (
-                    <SelectItem key={direction} value={direction}>
-                      {SORT_DIRECTION_LABELS[direction]}
-                    </SelectItem>
-                  ))}
+                  <SelectGroup>
+                    {PRODUCT_SORT_DIRECTIONS.map((direction) => (
+                      <SelectItem key={direction} value={direction}>
+                        {SORT_DIRECTION_LABELS[direction]}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 </SelectContent>
               </Select>
               <FieldError message={formErrors.sortDirection} />
