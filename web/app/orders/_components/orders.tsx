@@ -43,7 +43,7 @@ export const OrdersPage = (props: Props) => {
                     <div>
                         <h1 className="text-2xl font-bold tracking-tight text-foreground">Orders</h1>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Demo Commerce orders, newest first. Keyset (cursor) paging — Previous/Next pass the opaque cursor back unchanged.
+                            Demo Commerce orders, newest first. Keyset (cursor) paging .
                         </p>
                     </div>
                     <Suspense>
