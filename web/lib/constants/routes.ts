@@ -5,6 +5,7 @@ export const APP_ROUTES = {
   catalogProduct: (slug: string) => `/catalog/products/${slug}`,
   CATEGORIES: "/categories",
   PRODUCTS: "/products",
+  ORDERS: "/orders",
 } as const;
 
 export const API_ROUTES = {
@@ -12,4 +13,5 @@ export const API_ROUTES = {
   BRANDS: "/catalog/brands",
   CATEGORIES: "/catalog/categories",
   PRODUCTS: "/products-page",
+  ORDERS: "/orders",
 } as const;
