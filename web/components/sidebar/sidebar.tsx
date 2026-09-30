@@ -69,7 +69,7 @@ const data = {
         },
         {
             name: "Orders",
-            url: "#",
+            url: APP_ROUTES.ORDERS,
             icon: ShoppingCart,
         },
         {
